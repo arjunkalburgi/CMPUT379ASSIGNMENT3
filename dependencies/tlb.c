@@ -55,6 +55,76 @@ void tlb_flush(tlb_t * t) {
     }
 }
 
+node_t * tlb_get(tlb_t * t, int val) {
+    node_t * match = tlb_match(t, val); 
+
+    if (match == NULL) {
+        return tlb_insert(t, val); 
+    }
+
+    return match; 
+}
+
+node_t * tlb_insert(tlb_t * t, int val) {
+    /*
+        this is called if tlb does not have val
+    */
+    node_t * head = t->head;
+
+    // get from pagetable
+    node_t * new = malloc(sizeof(node_t));
+    new->val = val; 
+    new->next = NULL; 
+    new->prev = t->end;
+
+    if (t->length < t->capacity) {
+        // increase length
+        t->length = t->length + 1; 
+    } else {
+        // evict 
+        node_t *temp = t->head; 
+        t->head = t->head->next; 
+        free(temp); 
+    }
+
+    // append to end
+    t->end->next = new; 
+    t->end = new;
+
+    return new;
+}
+
+int main(int argc, char const *argv[]) {
+
+    tlb_t *tlb = make_tlb(3, 1); 
+    tlb_put(tlb, 2); 
+    tlb_put(tlb, 3); 
+    print_tlb_info(tlb);
+    print_list(tlb); 
+
+    // match end
+    tlb_put(tlb, 3); 
+    print_tlb_info(tlb);
+    print_list(tlb);
+
+    // match 
+    tlb_put(tlb, 2); 
+    print_tlb_info(tlb);
+    print_list(tlb); 
+
+    // match head
+    tlb_put(tlb, 1); 
+    print_tlb_info(tlb);
+    print_list(tlb); 
+
+    // no match
+    tlb_put(tlb, 4); 
+    print_tlb_info(tlb);
+    print_list(tlb);
+}
+
+
+
 node_t * tlb_match(tlb_t * t, int val) {
     node_t *previous, *current;
     node_t * head = t->head; 
@@ -79,7 +149,7 @@ node_t * tlb_match(tlb_t * t, int val) {
     return NULL;
 }
 
-int tlb_insert(tlb_t * t, int val) {
+int tlb_put(tlb_t * t, int val) {
     node_t * head = t->head;
 
     if (t->length < t->capacity) {
@@ -138,33 +208,4 @@ int tlb_insert(tlb_t * t, int val) {
     }
 
     return 0; 
-}
-
-int main(int argc, char const *argv[]) {
-
-    tlb_t *tlb = make_tlb(3, 1); 
-    tlb_insert(tlb, 2); 
-    tlb_insert(tlb, 3); 
-    print_tlb_info(tlb);
-    print_list(tlb); 
-
-    // match end
-    tlb_insert(tlb, 3); 
-    print_tlb_info(tlb);
-    print_list(tlb);
-
-    // match 
-    tlb_insert(tlb, 2); 
-    print_tlb_info(tlb);
-    print_list(tlb); 
-
-    // match head
-    tlb_insert(tlb, 1); 
-    print_tlb_info(tlb);
-    print_list(tlb); 
-
-    // no match
-    tlb_insert(tlb, 4); 
-    print_tlb_info(tlb);
-    print_list(tlb);
 }

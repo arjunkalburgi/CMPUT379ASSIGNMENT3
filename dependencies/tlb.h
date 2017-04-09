@@ -19,5 +19,11 @@ void print_tlb_info(tlb_t * tlb);
 void print_node_info(node_t * node);
 void print_list(tlb_t * t);
 void tlb_flush(tlb_t * t);
-node_t * tlb_match(tlb_t * t, int val);
+
+// with pagetable
+node_t * tlb_get(tlb_t * t, int val);
 int tlb_insert(tlb_t * t, int val);
+
+// without pagetable
+int tlb_put(tlb_t * t, int val);
+node_t * tlb_match(tlb_t * t, int val);
