@@ -47,12 +47,15 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 		int x = 0;
 		for(x=0; x< quantum; x++){
 			fread(memory_extract, sizeof(4), 1, ptr);
-			//printf("tester\n");
+
+			//Pass memory extract from here? 
+			//memory extract should hold one entry at a time, quantum loops through all the entries
+
+			printf("%x ", memory_extract);
 			int i;
-			printf("hi\n");
-			for (i=0; i<4; i++){
-   				printf("%d ", memory_extract[i]);
-			}
+			//for (i=0; i<4; i++){
+   			//	printf("%d ", memory_extract[i]);
+			//}
 			printf("\n ");
 			
 			//printf("%s\n", memory_extract);
