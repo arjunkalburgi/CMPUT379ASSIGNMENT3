@@ -55,8 +55,7 @@ int round_robin(double quantum, double pgsize_topass, const char* tracefiles, ..
 	return 0;
 }
 
-int main(int argc, char const *argv[])
-{	
+int main(int argc, char const *argv[]) {	
 	//printf("made it here\n");
 	printf("pgsize: %s\n", argv[1]);
 	printf("tlbentries: %s\n", argv[2]);

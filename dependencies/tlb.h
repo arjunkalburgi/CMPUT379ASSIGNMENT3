@@ -2,7 +2,9 @@
 #include <stdlib.h>
 
 typedef struct node {
-    int val;
+	int pagenumber;
+	int framenumber;
+	int validbit;
     struct node * prev;
     struct node * next;
 } node_t;
@@ -22,7 +24,7 @@ void tlb_flush(tlb_t * t);
 
 // with pagetable
 node_t * tlb_get(tlb_t * t, int val);
-int tlb_insert(tlb_t * t, int val);
+node_t * tlb_insert(tlb_t * t, int val);
 
 // without pagetable
 int tlb_put(tlb_t * t, int val);

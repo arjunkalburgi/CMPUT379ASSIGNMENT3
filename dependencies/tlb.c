@@ -1,10 +1,12 @@
+// implementation modified from http://www.learn-c.org/en/Linked_lists
+
 #include "tlb.h"
 
-tlb_t * make_tlb(int cap, int headvalue) {
+tlb_t * make_tlb(int cap, int headpagenumberue) {
     tlb_t * new_tlb = malloc(sizeof(tlb_t)); 
 
     node_t * head = malloc(sizeof(node_t));
-    head->val = headvalue;
+    head->pagenumber = headpagenumberue;
     head->prev = NULL; 
     head->next = NULL; 
 
@@ -13,22 +15,22 @@ tlb_t * make_tlb(int cap, int headvalue) {
     new_tlb->length = 1; 
     new_tlb->capacity = cap; 
 
-    printf("tlblen: %d, tlbcap: %d, tlbhead: %d, tlbend: %d\n", new_tlb->length, new_tlb->capacity, new_tlb->head->val, new_tlb->end->val);
+    printf("tlblen: %d, tlbcap: %d, tlbhead: %d, tlbend: %d\n", new_tlb->length, new_tlb->capacity, new_tlb->head->pagenumber, new_tlb->end->pagenumber);
 
     return new_tlb; 
 }
 
 void print_tlb_info(tlb_t * tlb) {
-    printf("tlblen: %d, tlbcap: %d, tlbhead: %d, tlbend: %d\n", tlb->length, tlb->capacity, tlb->head->val, tlb->end->val);
+    printf("tlblen: %d, tlbcap: %d, tlbhead: %d, tlbend: %d\n", tlb->length, tlb->capacity, tlb->head->pagenumber, tlb->end->pagenumber);
 }
 
 void print_node_info(node_t * node) {
     if (node->next == NULL) {
-        printf("nodeprev: %d, val: %d, nodenext: %s\n", node->prev->val, node->val, "NULL");
+        printf("nodeprev: %d, pagenumber: %d, nodenext: %s\n", node->prev->pagenumber, node->pagenumber, "NULL");
     } else if (node->prev == NULL) {
-        printf("nodeprev: %s, val: %d, nodenext: %d\n", "NULL", node->val, node->next->val);
+        printf("nodeprev: %s, pagenumber: %d, nodenext: %d\n", "NULL", node->pagenumber, node->next->pagenumber);
     } else {
-        printf("nodeprev: %d, val: %d, nodenext: %d\n", node->prev->val, node->val, node->next->val);
+        printf("nodeprev: %d, pagenumber: %d, nodenext: %d\n", node->prev->pagenumber, node->pagenumber, node->next->pagenumber);
     }
 }
 
@@ -36,7 +38,7 @@ void print_list(tlb_t * t) {
     node_t * current = t->head;
     int num = 1; 
     while (current != NULL) {
-        printf("%d: %d\n", num, current->val);
+        printf("%d: %d\n", num, current->pagenumber);
         current = current->next;
         num++; 
     }
@@ -55,25 +57,25 @@ void tlb_flush(tlb_t * t) {
     }
 }
 
-node_t * tlb_get(tlb_t * t, int val) {
-    node_t * match = tlb_match(t, val); 
+node_t * tlb_get(tlb_t * t, int pagenumber) {
+    node_t * match = tlb_match(t, pagenumber); 
 
     if (match == NULL) {
-        return tlb_insert(t, val); 
+        return tlb_insert(t, pagenumber); 
     }
 
     return match; 
 }
 
-node_t * tlb_insert(tlb_t * t, int val) {
+node_t * tlb_insert(tlb_t * t, int pagenumber) {
     /*
-        this is called if tlb does not have val
+        this is called if tlb does not have pagenumber
     */
     node_t * head = t->head;
 
     // get from pagetable
     node_t * new = malloc(sizeof(node_t));
-    new->val = val; 
+    new->pagenumber = pagenumber; 
     new->next = NULL; 
     new->prev = t->end;
 
@@ -125,7 +127,7 @@ int main(int argc, char const *argv[]) {
 
 
 
-node_t * tlb_match(tlb_t * t, int val) {
+node_t * tlb_match(tlb_t * t, int pagenumber) {
     node_t *previous, *current;
     node_t * head = t->head; 
 
@@ -133,13 +135,13 @@ node_t * tlb_match(tlb_t * t, int val) {
         return head;
     }
 
-    if ((head)->val == val) {
+    if ((head)->pagenumber == pagenumber) {
         return head;
     }
 
     previous = current = (head)->next;
     while (current) {
-        if (current->val == val) {
+        if (current->pagenumber == pagenumber) {
             return current;
         }
 
@@ -149,13 +151,13 @@ node_t * tlb_match(tlb_t * t, int val) {
     return NULL;
 }
 
-int tlb_put(tlb_t * t, int val) {
+int tlb_put(tlb_t * t, int pagenumber) {
     node_t * head = t->head;
 
     if (t->length < t->capacity) {
         // append to end
         node_t * new = malloc(sizeof(node_t));
-        new->val = val; 
+        new->pagenumber = pagenumber; 
         new->next = NULL; 
         new->prev = t->end;
         t->end->next = new; 
@@ -164,7 +166,7 @@ int tlb_put(tlb_t * t, int val) {
         return 1;
     }
 
-    node_t * match = tlb_match(t, val); 
+    node_t * match = tlb_match(t, pagenumber); 
     if (match != NULL) {
         // already in there
         // if it's the head
@@ -199,7 +201,7 @@ int tlb_put(tlb_t * t, int val) {
         free(temp); 
         // append to end
         node_t * new = malloc(sizeof(node_t));
-        new->val = val; 
+        new->pagenumber = pagenumber; 
         new->next = NULL; 
         new->prev = t->end;
         t->end->next = new; 
