@@ -20,5 +20,5 @@ clean:
 	for n in tests; do $(MAKE) -C $$n clean; done
 
 
-# ./tvm379 heyy1 heyy2 heyy3 heyy4 heyy5 heyy6 heyy7
+# ./tvm379 16 heyy2 heyy3 10 heyy5 heyy6 heyy7
 # @./tvm379 ${pgsize} ${tlbentries} ${gflag} ${quantum} ${physpages} ${mflag} ${trace1} 

@@ -18,7 +18,7 @@ struct rec{
 */
 };
 
-int round_robin(double quantum, double pgsize_topass, const char* tracefiles, ...){
+int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 	//for file in tracefiles {
 	//	for line in file, line<10 {
 	//		tlb.match() 
@@ -32,27 +32,36 @@ int round_robin(double quantum, double pgsize_topass, const char* tracefiles, ..
 		char *string = va_arg(arg, const char *);
 		FILE *ptr;
 		struct rec tester;
-		printf("string: %s\n", string);
-		ptr = fopen(string, "r");
+		//printf("string: %s\n", string);
+
+		char *result = malloc(strlen(string)+strlen(".bin")+1);//+1 for the zero-terminator
+		strcpy(result, string);
+		strcat(result, ".bin");
+		printf("new string: %s\n", result);
+
+		ptr = fopen(result, "rb");
 		if (!ptr){
-			printf("Unable to open file!");
+			printf("Unable to open file!\n");
 			return 1;
 		}
 		int x = 0;
 		for(x=0; x< quantum; x++){
-			fread(memory_extract, 4, 1, ptr);
+			fread(memory_extract, sizeof(4), 1, ptr);
 			//printf("tester\n");
 			int i;
+			printf("hi\n");
 			for (i=0; i<4; i++){
-   				printf("%d\n", memory_extract[i]);
+   				printf("%d ", memory_extract[i]);
 			}
+			printf("\n ");
+			
 			//printf("%s\n", memory_extract);
 		}
 		fclose(ptr);
 
 	}
 	va_end(arg);
-	return 0;
+ 	return 0;
 }
 
 int main(int argc, char const *argv[])
@@ -61,7 +70,7 @@ int main(int argc, char const *argv[])
 	printf("pgsize: %s\n", argv[1]);
 	printf("tlbentries: %s\n", argv[2]);
 	printf("flag: %s\n", argv[3]);
-	printf("uantum: %s\n", argv[4]);
+	printf("quantum: %s\n", argv[4]);
 	printf("hyspages: %s\n", argv[5]);
 	printf("flag: %s\n", argv[6]);
 
@@ -83,11 +92,11 @@ int main(int argc, char const *argv[])
 	//int quantum = 100;
 	//strcpy(start, argv[5]); 
 	//quantum = atoi(start);
-	double pgsize = 16;
-	double pgsize_topass = log10(pgsize)/log10(2);
-	double quantum = 10;
+	int pgsize = atoi(argv[1]);
+	//double pgsize_topass = log10(pgsize)/log10(2);
+	int quantum = atoi(argv[4]);
 
-	round_robin(quantum, pgsize_topass, "heapsort-trace", "quicksort-trace");
+	round_robin(quantum, pgsize,"test", "heapsort-trace", "quicksort-trace");
 
 	return 0;
 }
