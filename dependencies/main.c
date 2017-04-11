@@ -2,6 +2,8 @@
 #include <math.h>
 #include <stdint.h>
 #include <stdarg.h>
+#include <string.h>
+#include <stdlib.h>
 
 struct rec{
 
@@ -25,7 +27,7 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 	//	}
 	//}
 	//char* string[10];
-	char memory_extract[16];
+	char* memory_extract;
 	va_list arg;
 	va_start(arg, tracefiles);
 	while(tracefiles){
@@ -40,26 +42,32 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 		printf("new string: %s\n", result);
 
 		ptr = fopen(result, "rb");
+		printf("made it here\n");
 		if (!ptr){
 			printf("Unable to open file!\n");
 			return 1;
 		}
+		
 		int x = 0;
 		for(x=0; x< quantum; x++){
 			fread(memory_extract, sizeof(4), 1, ptr);
-
+			printf("made it here 2\n");
 			//Pass memory extract from here? 
 			//memory extract should hold one entry at a time, quantum loops through all the entries
+			
+			int con = atoi(memory_extract);
+			int page_number = con/pgsize_topass;					
 
-			printf("%x ", memory_extract);
+			printf("PN: %d ", page_number);
 			int i;
-			//for (i=0; i<4; i++){
-   			//	printf("%d ", memory_extract[i]);
-			//}
+			for (i=0; i<4; i++){
+   				printf("%d ", memory_extract[i]);
+			}
 			printf("\n ");
 			
 			//printf("%s\n", memory_extract);
 		}
+		
 		fclose(ptr);
 
 	}
