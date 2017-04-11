@@ -52,6 +52,7 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 			printf("the memory_extract: %d\n", j);
 			int page_number = j/pgsize_topass;	//this is the page number!!				
 			printf("PN: %d\n", page_number);
+			// here, i think --> tlb(j, page_number);
 
 		}
 		
