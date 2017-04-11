@@ -27,7 +27,7 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 	//	}
 	//}
 	//char* string[10];
-	char* memory_extract;
+	char* memory_extract = malloc(quantum * sizeof(4));
 	va_list arg;
 	va_start(arg, tracefiles);
 	while(tracefiles){
@@ -42,7 +42,7 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 		printf("new string: %s\n", result);
 
 		ptr = fopen(result, "rb");
-		printf("made it here\n");
+		//printf("made it here\n");
 		if (!ptr){
 			printf("Unable to open file!\n");
 			return 1;
@@ -50,20 +50,23 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 		
 		int x = 0;
 		for(x=0; x< quantum; x++){
-			fread(memory_extract, sizeof(4), 1, ptr);
-			printf("made it here 2\n");
+			int j = 0;
+			fread(&j, sizeof(4), 1, ptr);
+			//printf("made it here 2\n");
 			//Pass memory extract from here? 
 			//memory extract should hold one entry at a time, quantum loops through all the entries
 			
-			int con = atoi(memory_extract);
-			int page_number = con/pgsize_topass;					
+			//int con = atoi(memory_extract);
+			//printf("memory_extract: %s\n",memory_extract );
+			printf("con: %d\n", j);
+			int page_number = j/pgsize_topass;	//this is the page number!!				
 
-			printf("PN: %d ", page_number);
-			int i;
-			for (i=0; i<4; i++){
-   				printf("%d ", memory_extract[i]);
-			}
-			printf("\n ");
+			printf("PN: %d\n ", page_number);
+			//int i;
+			//for (i=0; i<4; i++){
+   			//	printf("%d ", memory_extract[i]);
+			//}
+			//printf("\n ");
 			
 			//printf("%s\n", memory_extract);
 		}
