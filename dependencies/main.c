@@ -8,7 +8,7 @@
 #include "main.h"
 
 
-//./tvm379 16 tlbentries gp 10 physpages fl heapsort-trace quicksort-trace heapsort quicksort
+//./tvm379 16 16 gp 10 physpages fl heapsort-trace quicksort-trace heapsort quicksort
 
 /*	tvm379
 	pgsize
@@ -45,18 +45,18 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 		
 		int x = 0;
 		for(x=0; x< quantum; x++){
-			int j = 0;
+			uint32_t j = 0;
 			fread(&j, sizeof(4), 1, ptr);
 			//printf("made it here 2\n");
 			//Pass memory extract from here? 
 			//memory extract should hold one entry at a time, quantum loops through all the entries
 			
 
-			printf("the memory_extract: %d\n", j);
-			int page_number = j/pgsize_topass;	//this is the page number!!				
-			printf("PN: %d\n", page_number);
+			printf("the memory_extract: %u\n", j);
+			uint32_t page_number = j/pgsize_topass;	//this is the page number!!				
+			printf("PN: %u\n", page_number);
 			// here, i think --> tlb(j, page_number);
-			tlb_insert(tlb, page_number);
+			tlb_get(tlb, page_number);
 
 		}
 		
@@ -88,18 +88,17 @@ int main(int argc, char const *argv[]) {
 	}
 
 	// make tlb
-	tlb_t *tlb = make_tlb(/*int capacity of tlb*/); //-> pagetable -> freeframes list 
+	tlb = make_tlb(atoi(argv[2])); //-> pagetable -> freeframes list 
 
 
 	int pgsize = atoi(argv[1]);//this is the power of 2 still
-	double second = 0;//helper
+	double second;//helper
 	int pgsize_topass;//one we pass to round robin
 	second = log10(2);
 	pgsize_topass = (int)(log10(pgsize)/second);//calculate the val we pass to rr
 	int quantum = atoi(argv[4]);//#entries we take, also pass to rr
 	printf("pgsize_topass: %d\n", (int)pgsize_topass);
 	round_robin(quantum, pgsize_topass,"test", "heapsort-trace", "quicksort-trace", "heapsort", "quicksort");
-	
 	return 0;
 }
 

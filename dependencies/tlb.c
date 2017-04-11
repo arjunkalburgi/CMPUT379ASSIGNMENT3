@@ -6,7 +6,7 @@ tlb_t * make_tlb(int cap) {
     tlb_t * new_tlb = malloc(sizeof(tlb_t)); 
 
     node_t * head = malloc(sizeof(node_t));
-    head->val = NULL;
+    head->pagenumber;
     head->prev = NULL; 
     head->next = NULL; 
 
@@ -94,7 +94,7 @@ node_t * tlb_insert(tlb_t * t, int pagenumber) {
     }
 
     // append to end (unless tlb is empty (head is null))
-    if (t->head->val != NULL) {
+    if (t->head->pagenumber) {
         t->end->next = new; 
     } else {
         t->head = new; 
@@ -103,7 +103,7 @@ node_t * tlb_insert(tlb_t * t, int pagenumber) {
 
     return new;
 }
-
+/*
 int main(int argc, char const *argv[]) {
 
     tlb_t *tlb = make_tlb(3); 
@@ -133,7 +133,7 @@ int main(int argc, char const *argv[]) {
     print_tlb_info(tlb);
     print_list(tlb);
 }
-
+*/
 
 
 node_t * tlb_match(tlb_t * t, int pagenumber) {

@@ -16,7 +16,7 @@ typedef struct tlb {
     int capacity; 
 } tlb_t;
 
-tlb_t * make_tlb(int cap, int headvalue);
+tlb_t * make_tlb(int cap);
 void print_tlb_info(tlb_t * tlb);
 void print_node_info(node_t * node);
 void print_list(tlb_t * t);

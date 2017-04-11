@@ -1,5 +1,6 @@
 CC=gcc 
 main=./dependencies/main.c
+tlb=./dependencies/tlb.c
 
 # pgsize?="hey1"
 # tlbentries?="hey2"
@@ -13,8 +14,8 @@ main=./dependencies/main.c
 	# quantum physpages { f | l } 
 	# trace1 trace2 . . . tracen
 
-default: $(main)
-	@$(CC) $< -o tvm379 -lm
+default: $(main) $(tlb)
+	@$(CC) $< $(tlb) -o tvm379 -lm
 
 clean:
 	for n in tests; do $(MAKE) -C $$n clean; done
