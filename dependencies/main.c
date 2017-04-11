@@ -5,6 +5,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "main.h"
+
+
 //./tvm379 16 tlbentries gp 10 physpages fl heapsort-trace quicksort-trace heapsort quicksort
 
 /*	tvm379
@@ -53,10 +56,12 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 			int page_number = j/pgsize_topass;	//this is the page number!!				
 			printf("PN: %d\n", page_number);
 			// here, i think --> tlb(j, page_number);
+			tlb_insert(tlb, page_number);
 
 		}
 		
 		fclose(ptr);
+		// if local -> flush 
 
 	}
 	va_end(arg);
@@ -83,7 +88,8 @@ int main(int argc, char const *argv[]) {
 	}
 
 	// make tlb
-	// make_tlb(/*int capacity of tlb*/);
+	tlb_t *tlb = make_tlb(/*int capacity of tlb*/); //-> pagetable -> freeframes list 
+
 
 	int pgsize = atoi(argv[1]);//this is the power of 2 still
 	double second = 0;//helper

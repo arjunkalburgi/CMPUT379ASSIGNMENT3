@@ -1,13 +1,13 @@
 CC=gcc 
 main=./dependencies/main.c
 
-pgsize?="hey1"
-tlbentries?="hey2"
-gflag?="hey3"
-quantum?="hey4"
-physpages?="hey5"
-mflag?="hey6"
-trace1?="hey7"
+# pgsize?="hey1"
+# tlbentries?="hey2"
+# gflag?="hey3"
+# quantum?="hey4"
+# physpages?="hey5"
+# mflag?="hey6"
+# trace1?="hey7"
 
 # tvm379 pgsize tlbentries { g | p } 
 	# quantum physpages { f | l } 
