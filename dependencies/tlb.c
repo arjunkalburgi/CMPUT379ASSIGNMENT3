@@ -2,11 +2,11 @@
 
 #include "tlb.h"
 
-tlb_t * make_tlb(int cap, int headpagenumberue) {
+tlb_t * make_tlb(int cap) {
     tlb_t * new_tlb = malloc(sizeof(tlb_t)); 
 
     node_t * head = malloc(sizeof(node_t));
-    head->pagenumber = headpagenumberue;
+    head->val = NULL;
     head->prev = NULL; 
     head->next = NULL; 
 
@@ -58,6 +58,9 @@ void tlb_flush(tlb_t * t) {
 }
 
 node_t * tlb_get(tlb_t * t, int pagenumber) {
+    /*
+        Get stuff from the tlb or insert it from the pagetable
+    */
     node_t * match = tlb_match(t, pagenumber); 
 
     if (match == NULL) {
@@ -74,6 +77,7 @@ node_t * tlb_insert(tlb_t * t, int pagenumber) {
     node_t * head = t->head;
 
     // get from pagetable
+    // page_t * page = pgtbl_get()
     node_t * new = malloc(sizeof(node_t));
     new->pagenumber = pagenumber; 
     new->next = NULL; 
@@ -89,8 +93,12 @@ node_t * tlb_insert(tlb_t * t, int pagenumber) {
         free(temp); 
     }
 
-    // append to end
-    t->end->next = new; 
+    // append to end (unless tlb is empty (head is null))
+    if (t->head->val != NULL) {
+        t->end->next = new; 
+    } else {
+        t->head = new; 
+    }
     t->end = new;
 
     return new;
@@ -98,7 +106,8 @@ node_t * tlb_insert(tlb_t * t, int pagenumber) {
 
 int main(int argc, char const *argv[]) {
 
-    tlb_t *tlb = make_tlb(3, 1); 
+    tlb_t *tlb = make_tlb(3); 
+    tlb_put(tlb, 1); 
     tlb_put(tlb, 2); 
     tlb_put(tlb, 3); 
     print_tlb_info(tlb);
