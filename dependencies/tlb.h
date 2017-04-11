@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "measurementarray.h"
 
 typedef struct node {
 	int pagenumber;
@@ -23,7 +24,7 @@ void print_list(tlb_t * t);
 void tlb_flush(tlb_t * t);
 
 // with pagetable
-node_t * tlb_get(tlb_t * t, int val);
+node_t * tlb_get(tlb_t * t, int val, measurementarray_t *m);
 node_t * tlb_insert(tlb_t * t, int val);
 
 // without pagetable
