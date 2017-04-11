@@ -98,6 +98,10 @@ int main(int argc, char const *argv[])
 		printf("trace: %s\n", tracefiles[i]);
 	}
 
+	// make tlb
+	// make_tlb(/*int capacity of tlb*/);
+
+
 	//quantum = atoi(argv[4]);
 	//if (argc < 9) {
 	//	printf("Please call like so: 'tvm379 pgsize tlbentries { g | p } quantum physpages { f | l } trace1 trace2 . . .tracen'\n");
