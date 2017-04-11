@@ -14,7 +14,7 @@ trace1?="hey7"
 	# trace1 trace2 . . . tracen
 
 default: $(main)
-	@$(CC) $< -o tvm379
+	@$(CC) $< -o tvm379 -lm
 
 clean:
 	for n in tests; do $(MAKE) -C $$n clean; done

@@ -58,10 +58,10 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 			
 			//int con = atoi(memory_extract);
 			//printf("memory_extract: %s\n",memory_extract );
-			printf("con: %d\n", j);
+			printf("the memory_extract: %d\n", j);
 			int page_number = j/pgsize_topass;	//this is the page number!!				
 
-			printf("PN: %d\n ", page_number);
+			printf("PN: %d\n", page_number);
 			//int i;
 			//for (i=0; i<4; i++){
    			//	printf("%d ", memory_extract[i]);
@@ -101,21 +101,15 @@ int main(int argc, char const *argv[])
 	// make tlb
 	// make_tlb(/*int capacity of tlb*/);
 
-
-	//quantum = atoi(argv[4]);
-	//if (argc < 9) {
-	//	printf("Please call like so: 'tvm379 pgsize tlbentries { g | p } quantum physpages { f | l } trace1 trace2 . . .tracen'\n");
-	//	return 0; 
-	//}
-	//int quantum = 100;
-	//strcpy(start, argv[5]); 
-	//quantum = atoi(start);
 	int pgsize = atoi(argv[1]);
-	//double pgsize_topass = log10(pgsize)/log10(2);
+	double second = 0;
+	int pgsize_topass;
+	second = log10(2);
+	pgsize_topass = (int)(log10(pgsize)/second);
 	int quantum = atoi(argv[4]);
-
-	round_robin(quantum, pgsize,"test", "heapsort-trace", "quicksort-trace");
-
+	printf("pgsize_topass: %d\n", (int)pgsize_topass);
+	round_robin(quantum, pgsize_topass,"test", "heapsort-trace", "quicksort-trace", "heapsort", "quicksort");
+	
 	return 0;
 }
 
