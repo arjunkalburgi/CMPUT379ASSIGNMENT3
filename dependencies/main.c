@@ -95,7 +95,7 @@ int main(int argc, char const *argv[]) {
 	}
 
 	// make fl
-	frameslist = make_ffl(argv[5], argv[6]);
+	frameslist = make_ffl(atoi(argv[5]), argv[6]);
 
 	// make pgtbl
 	pgtable = ht_create(65536, frameslist);
@@ -104,6 +104,9 @@ int main(int argc, char const *argv[]) {
 	// make tlb
 	tlb = make_tlb(atoi(argv[2]), pgtable, frameslist); //-> pagetable -> freeframes list 
 	printf("made it after make_tlb\n");
+	frameslist->hash = pgtable; 
+	frameslist->tlb = tlb; 
+	pgtable->tlb = tlb; 
 
 	//printf("made it here\n");
 	// make measurementarray array

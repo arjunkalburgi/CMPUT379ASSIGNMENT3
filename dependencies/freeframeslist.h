@@ -1,24 +1,26 @@
 #ifndef _FREEFRAMESLIST_H_
 #define _FREEFRAMESLIST_H_
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "tlb.h"
+#include "pgtbl.h"
 
 typedef struct frame {
 	int framenumber; 
-    struct node * prev;
-    struct node * next;
+    struct frame * prev;
+    struct frame * next;
 } frame_t;
 
-typedef struct ffl {
-    struct node * head; 
-    struct node * end; 
+typedef struct ffl_s {
+    struct frame * head; 
+    struct frame * end; 
     int size;
     int capacity;
     char * type; //lru=l, fifo=f
+    struct hashtable_s * hash; 
+    struct tlb *tlb;
 } ffl_t;
 
-ffl_t * make_ffl(int cap);
+ffl_t * make_ffl(int cap, const char * flag);
 int ffl_get(ffl_t * l);
 void ffl_addframeToUsedList(ffl_t * l, int framenumber);
 void ffl_update(ffl_t * l, int framenumber); 

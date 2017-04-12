@@ -2,7 +2,7 @@
 #include "pgtbl.h"
 
 /* Create a new hashtable. */
-hashtable_t *ht_create( int size, , ffl_t * f ) {
+hashtable_t *ht_create( int size, ffl_t * f) {
 
 	hashtable_t *hashtable = NULL;
 	int i;
@@ -21,9 +21,15 @@ hashtable_t *ht_create( int size, , ffl_t * f ) {
 	for( i = 0; i < size; i++ ) {
 		hashtable->table[i] = NULL;
 	}
+	if( ( hashtable->frametable = malloc( sizeof( entry_t * ) * size ) ) == NULL ) {
+		return NULL;
+	}
+	for( i = 0; i < size; i++ ) {
+		hashtable->frametable[i] = NULL;
+	}
 
 	hashtable->size = size;
-    hashtable->framelist = f; 
+    hashtable->frameslist = f; 
 
 	return hashtable;	
 }
@@ -135,42 +141,67 @@ page_t *ht_get( hashtable_t *hashtable, char *key ) {
 	}
 	
 }
+
 /*
-int main( int argc, char **argv ) {
+	int main( int argc, char **argv ) {
 
-	hashtable_t *hashtable = ht_create( 65536 );
+		hashtable_t *hashtable = ht_create( 65536 );
 
-	page_t * value1 = malloc(sizeof(page_t)); 
-	value1->pagenumber = 1;
-	value1->framenumber = 1;
-	value1->validbit = 1;
-	page_t * value2 = malloc(sizeof(page_t)); 
-	value2->pagenumber = 2;
-	value2->framenumber = 2;
-	value2->validbit = 2;
-	page_t * value3 = malloc(sizeof(page_t)); 
-	value3->pagenumber = 3;
-	value3->framenumber = 3;
-	value3->validbit = 3;
-	page_t * value4 = malloc(sizeof(page_t)); 
-	value4->pagenumber = 4;
-	value4->framenumber = 4;
-	value4->validbit = 4;
+		page_t * value1 = malloc(sizeof(page_t)); 
+		value1->pagenumber = 1;
+		value1->framenumber = 1;
+		value1->validbit = 1;
+		page_t * value2 = malloc(sizeof(page_t)); 
+		value2->pagenumber = 2;
+		value2->framenumber = 2;
+		value2->validbit = 2;
+		page_t * value3 = malloc(sizeof(page_t)); 
+		value3->pagenumber = 3;
+		value3->framenumber = 3;
+		value3->validbit = 3;
+		page_t * value4 = malloc(sizeof(page_t)); 
+		value4->pagenumber = 4;
+		value4->framenumber = 4;
+		value4->validbit = 4;
 
-	ht_set( hashtable, "key1", value1 );
-	ht_set( hashtable, "key2", value2 );
-	ht_set( hashtable, "key3", value3 );
-	ht_set( hashtable, "key4", value4 );
+		ht_set( hashtable, "key1", value1 );
+		ht_set( hashtable, "key2", value2 );
+		ht_set( hashtable, "key3", value3 );
+		ht_set( hashtable, "key4", value4 );
 
-	page_t * blah1 = ht_get( hashtable, "key1" );
-	printf( "key1 %d %d %d\n", blah1->pagenumber, blah1->framenumber, blah1->validbit );
-	page_t * blah2 = ht_get( hashtable, "key2" );
-	printf( "key2 %d %d %d\n", blah2->pagenumber, blah2->framenumber, blah2->validbit );
-	page_t * blah3 = ht_get( hashtable, "key3" );
-	printf( "key3 %d %d %d\n", blah3->pagenumber, blah3->framenumber, blah3->validbit );
-	page_t * blah4 = ht_get( hashtable, "key4" );
-	printf( "key4 %d %d %d\n", blah4->pagenumber, blah4->framenumber, blah4->validbit );
+		page_t * blah1 = ht_get( hashtable, "key1" );
+		printf( "key1 %d %d %d\n", blah1->pagenumber, blah1->framenumber, blah1->validbit );
+		page_t * blah2 = ht_get( hashtable, "key2" );
+		printf( "key2 %d %d %d\n", blah2->pagenumber, blah2->framenumber, blah2->validbit );
+		page_t * blah3 = ht_get( hashtable, "key3" );
+		printf( "key3 %d %d %d\n", blah3->pagenumber, blah3->framenumber, blah3->validbit );
+		page_t * blah4 = ht_get( hashtable, "key4" );
+		printf( "key4 %d %d %d\n", blah4->pagenumber, blah4->framenumber, blah4->validbit );
 
-	return 0;
-}
+		return 0;
+	}
 */
+
+void ht_framematch(hashtable_t *h, int framenumber) {
+	
+	char * key; // = itoa(framenumber); // framenumber to char 
+	int bin = 0;
+	entry_t *pair;
+
+	bin = ht_hash( h, key );
+
+	/* Step through the bin, looking for our value. */
+	pair = h->frametable[ bin ];
+	while( pair != NULL && pair->key != NULL && strcmp( key, pair->key ) > 0 ) {
+		pair = pair->next;
+	}
+
+	page_t * pg = pair->value; 
+
+	// set pg's bit to invalid
+
+	// call tlb's framematch with page
+
+}
+
+// void ht_frameset, make the thing too 
