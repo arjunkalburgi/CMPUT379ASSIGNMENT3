@@ -2,7 +2,7 @@
 
 #include "tlb.h"
 
-tlb_t * make_tlb(int cap, hashtable_t * h) {
+tlb_t * make_tlb(int cap, hashtable_t * h, ffl_t * f) {
     tlb_t * new_tlb = malloc(sizeof(tlb_t)); 
 
     node_t * head = malloc(sizeof(node_t));
@@ -19,8 +19,9 @@ tlb_t * make_tlb(int cap, hashtable_t * h) {
     new_tlb->length = 1; 
     new_tlb->capacity = cap;
     new_tlb->hash = h; 
+    new_tlb->framelist = f; 
     printf("new tlb made:\n tlblen: %d, tlbcap: %d\n", new_tlb->length, new_tlb->capacity);
-/*, tlbhead: %d, tlbend: %d\n",*/
+    /*, tlbhead: %d, tlbend: %d\n",*/
     /*, new_tlb->head->data->pagenumber, new_tlb->end->data->pagenumber*/
     return new_tlb; 
 }
@@ -76,6 +77,9 @@ node_t * tlb_get(tlb_t * t, int pagenumber, measurementarray_t *m) {
         //printf("bout to insert\n");
         //printf("PN: %d\n", pagenumber);
         return tlb_insert(t, pagenumber); 
+    } else {
+        // tlb hit 
+        // if (t->frameslist->flag == "l") {ffl_update(t->frameslist, t->data->framenumber)}
     }
     //printf("made it in get match=null\n");
     m->tlbhits++;
@@ -178,7 +182,7 @@ node_t * tlb_match(tlb_t * t, int pagenumber) {
     return NULL;
 }
 
-int tlb_put(tlb_t * t, int pagenumber) {
+/*int tlb_put(tlb_t * t, int pagenumber) {
     node_t * head = t->head;
 
     if (t->length < t->capacity) {
@@ -237,4 +241,4 @@ int tlb_put(tlb_t * t, int pagenumber) {
     }
 
     return 0; 
-}
+}*/

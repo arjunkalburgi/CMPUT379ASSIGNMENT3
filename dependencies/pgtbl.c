@@ -2,7 +2,7 @@
 #include "pgtbl.h"
 
 /* Create a new hashtable. */
-hashtable_t *ht_create( int size ) {
+hashtable_t *ht_create( int size, , ffl_t * f ) {
 
 	hashtable_t *hashtable = NULL;
 	int i;
@@ -23,6 +23,7 @@ hashtable_t *ht_create( int size ) {
 	}
 
 	hashtable->size = size;
+    hashtable->framelist = f; 
 
 	return hashtable;	
 }
@@ -125,6 +126,8 @@ page_t *ht_get( hashtable_t *hashtable, char *key ) {
 	/* Did we actually find anything? */
 	if( pair == NULL || pair->key == NULL || strcmp( key, pair->key ) != 0 ) {
 		/* Get a new frame for this. */
+		// return framenumber 
+		// and mark page with framenumber as invalid
 		return NULL;
 
 	} else {

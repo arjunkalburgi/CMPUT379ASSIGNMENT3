@@ -15,11 +15,12 @@ typedef struct entry_s {
 
 typedef struct hashtable_s {
 	int size;
-	struct entry_s **table;		
+	struct entry_s **table;
+    struct ffl_t * frameslist; 
 } hashtable_t;
 
 
-hashtable_t *ht_create( int size ); 
+hashtable_t *ht_create( int size, ffl_t * f ); 
 int ht_hash( hashtable_t *hashtable, char *key ); 
 entry_t *ht_newpair( char *key, page_t *value ); 
 void ht_set( hashtable_t *hashtable, char *key, page_t *value ); 

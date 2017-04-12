@@ -79,8 +79,8 @@ int main(int argc, char const *argv[]) {
 	printf("tlbentries: %s\n", argv[2]);
 	printf("flag: %s\n", argv[3]);
 	printf("quantum: %s\n", argv[4]);
-	printf("hyspages: %s\n", argv[5]);
-	printf("flag: %s\n", argv[6]);
+	printf("physpages: %s\n", argv[5]);
+	printf("ffl flag: %s\n", argv[6]);
 
 	int numberoftracefiles = argc-7; 
 
@@ -94,13 +94,17 @@ int main(int argc, char const *argv[]) {
 		printf("trace: %s\n", tracefiles[i]);
 	}
 
-	// make hash 
-	hashtable = ht_create( 65536 );
-	//printf("made it after hashtable create\n");
+
+	// make fl
+	frameslist = make_ffl(argv[5], argv[6]);
+
+	// make pgtbl
+	pgtable = ht_create(65536, frameslist);
+	printf("made it after hashtable create\n");
 
 	// make tlb
-	tlb = make_tlb(atoi(argv[2]), hashtable); //-> pagetable -> freeframes list 
-	//printf("made it after make_tlb\n");
+	tlb = make_tlb(atoi(argv[2]), pgtable, frameslist); //-> pagetable -> freeframes list 
+	printf("made it after make_tlb\n");
 
 	//printf("made it here\n");
 	// make measurementarray array
