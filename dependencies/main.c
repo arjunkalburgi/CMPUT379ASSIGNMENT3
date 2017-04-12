@@ -56,7 +56,7 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 			uint32_t page_number = j/pgsize_topass;	//this is the page number!!				
 			printf("PN: %u\n", page_number);
 			// here, i think --> tlb(j, page_number);
-			tlb_get(tlb, page_number);
+			printf("the PN from tlb get: %d\n",(tlb_get(tlb, page_number))->pagenumber);
 
 		}
 		
