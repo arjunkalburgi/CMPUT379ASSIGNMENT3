@@ -1,3 +1,6 @@
+#ifndef _TLB_H_
+#define _TLB_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "measurementarray.h"
@@ -31,3 +34,5 @@ node_t * tlb_insert(tlb_t * t, int val);
 // without pagetable
 int tlb_put(tlb_t * t, int val);
 node_t * tlb_match(tlb_t * t, int val);
+
+#endif

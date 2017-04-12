@@ -1,3 +1,6 @@
+#ifndef _PGTBL_H_
+#define _PGTBL_H_
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
@@ -21,3 +24,5 @@ int ht_hash( hashtable_t *hashtable, char *key );
 entry_t *ht_newpair( char *key, page_t *value ); 
 void ht_set( hashtable_t *hashtable, char *key, page_t *value ); 
 page_t *ht_get( hashtable_t *hashtable, char *key );
+
+#endif

@@ -1,3 +1,5 @@
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
 #include "tlb.h"
 #include "pgtbl.h"
@@ -10,3 +12,5 @@ struct measurementarray_t ** measurementarr;
 int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...);
 
 
+
+#endif

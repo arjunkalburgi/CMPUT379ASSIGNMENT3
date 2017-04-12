@@ -80,7 +80,7 @@ node_t * tlb_insert(tlb_t * t, int pagenumber) {
     // get from pagetable
     node_t * new = malloc(sizeof(node_t));
     new->data->pagenumber = pagenumber; 
-    // new->data = pgtbl_get(hash, itoa(pagenumber));
+    // new->data = pgtbl_get(hash, itoa(pagenumber)); // return frame number 
     new->next = NULL; 
     new->prev = t->end;
 
