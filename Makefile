@@ -1,7 +1,7 @@
 CC=gcc 
 main=./dependencies/main.c
 tlb=./dependencies/tlb.c
-
+ma=./dependencies/measurementarray.c
 # pgsize?="hey1"
 # tlbentries?="hey2"
 # gflag?="hey3"
@@ -14,7 +14,7 @@ tlb=./dependencies/tlb.c
 	# quantum physpages { f | l } 
 	# trace1 trace2 . . . tracen
 
-default: $(main) $(tlb)
+default: $(main) $(tlb) $(ma)
 	@$(CC) $< $(tlb) -o tvm379 -lm
 
 clean:

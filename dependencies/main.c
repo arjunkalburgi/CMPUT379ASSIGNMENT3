@@ -20,19 +20,20 @@
 	trace1 trace2 . . .tracen
 */
 
-int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
+int round_robin(int quantum, int pgsize_topass, const char* tracefiles[], int numberoftracefiles){
 
 	//char* memory_extract = malloc(quantum * sizeof(4));
-	va_list arg;
-	va_start(arg, tracefiles);
-	while(tracefiles){
-		char *string = va_arg(arg, const char *);
+	//va_list arg;
+	//va_start(arg, tracefiles);
+	int index = 0;
+	for(index = 0; index < numberoftracefiles; index++){
+		
 		FILE *ptr;
 
 		//printf("string: %s\n", string);
 
-		char *result = malloc(strlen(string)+strlen(".bin")+1);//+1 for the zero-terminator
-		strcpy(result, string);
+		char *result = malloc(strlen(tracefiles[index])+strlen(".bin")+1);//+1 for the zero-terminator
+		strcpy(result, tracefiles[index]);
 		strcat(result, ".bin");
 		printf("new string: %s\n", result);
 
@@ -57,7 +58,8 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 			printf("PN: %u\n", page_number);
 			// here, i think --> tlb(j, page_number);
 			printf("the PN from tlb get: %d\n",(tlb_get(tlb, page_number))->pagenumber);
-			tlb_get(tlb, page_number, measurementarrarr[]);
+			
+			tlb_get(tlb, page_number, measurementarrarr[index]);
 
 		}
 		
@@ -65,7 +67,7 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 		// if local -> flush 
 
 	}
-	va_end(arg);
+	
  	return 0;
 }
 
@@ -103,7 +105,7 @@ int main(int argc, char const *argv[]) {
 	pgsize_topass = (int)(log10(pgsize)/second);//calculate the val we pass to rr
 	int quantum = atoi(argv[4]);//#entries we take, also pass to rr
 	printf("pgsize_topass: %d\n", (int)pgsize_topass);
-	round_robin(quantum, pgsize_topass,"test", "heapsort-trace", "quicksort-trace", "heapsort", "quicksort");
+	round_robin(quantum, pgsize_topass, tracefiles, numberoftracefiles);
 	return 0;
 }
 

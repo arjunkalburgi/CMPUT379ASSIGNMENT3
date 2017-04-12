@@ -64,9 +64,10 @@ node_t * tlb_get(tlb_t * t, int pagenumber, measurementarray_t *m) {
     node_t * match = tlb_match(t, pagenumber); 
 
     if (match == NULL) {
+        m->tlbmisses++; 
         return tlb_insert(t, pagenumber); 
     }
-
+    m->tlbhits++;
     return match; 
 }
 

@@ -5,5 +5,5 @@ typedef struct measurementarray {
 	int memoryresidentpagesforprocess;
 } measurementarray_t;
 
-void outputmeasurementarray(char[] tracefile, measurementarray_t * m); 
+//void outputmeasurementarray(char[] tracefile, measurementarray_t * m); 
 void recordhit(measurementarray_t *m); 
