@@ -76,6 +76,7 @@ node_t * tlb_get(tlb_t * t, int pagenumber, measurementarray_t *m) {
         return tlb_insert(t, pagenumber); 
     } else {
         // TLB HIT
+        ffl_update(t->frameslist, match->data->framenumber);
         // UPDATE FFL 
     }
     //printf("made it in get match=null\n");

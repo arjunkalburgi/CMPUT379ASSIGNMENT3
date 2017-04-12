@@ -24,7 +24,7 @@ typedef struct tlb {
 } tlb_t;
 
 
-tlb_t * make_tlb(int cap, hashtable_t * h, ffl_t * f);
+tlb_t * make_tlb(int cap, struct hashtable_s * h, struct ffl_s * f);
 void print_tlb_info(tlb_t * tlb);
 void print_node_info(node_t * node);
 void print_list(tlb_t * t);
