@@ -137,6 +137,8 @@ page_t *ht_get( hashtable_t *hashtable, char *key ) {
 		return NULL;
 
 	} else {
+		// PAGETABLE HIT
+		// UPDATE FFL
 		return pair->value;
 	}
 	

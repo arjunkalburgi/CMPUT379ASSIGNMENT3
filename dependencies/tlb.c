@@ -10,10 +10,7 @@ tlb_t * make_tlb(int cap, hashtable_t * h, ffl_t * f) {
     head = NULL;
     //((head)->data)->pagenumber = -1;
     //printf("made it after pg num assign\n");
-/*
-    head->prev = NULL; 
-    head->next = NULL; 
- */
+
     new_tlb->head = head;
     new_tlb->end = new_tlb->head; 
     new_tlb->length = 1; 
@@ -78,8 +75,8 @@ node_t * tlb_get(tlb_t * t, int pagenumber, measurementarray_t *m) {
         //printf("PN: %d\n", pagenumber);
         return tlb_insert(t, pagenumber); 
     } else {
-        // tlb hit 
-        // if (t->frameslist->flag == "l") {ffl_update(t->frameslist, t->data->framenumber)}
+        // TLB HIT
+        // UPDATE FFL 
     }
     //printf("made it in get match=null\n");
     m->tlbhits++;

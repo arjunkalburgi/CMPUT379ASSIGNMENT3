@@ -79,42 +79,42 @@ void ffl_addframeToUsedList(ffl_t * l, int framenumber) {
 }
 
 void ffl_update(ffl_t * l, int framenumber) {
-
-    // copy this from tlb_match
-        // that will give you the frame_t that needs to be in the back 
-        // take it out of it's spot, and put it in the back 
-    frame_t *previous, *current;
-    frame_t *head = l->head; 
-
-    if (head == NULL) {
-        return NULL;
-    }
-    if ((head)->framenumber == framenumber) {
-        return head;
-    }
-    previous = current = (head)->next;
-    while (current) {
-        if (current->framenumber == framenumber) {
-            return current;
-        }
-
-        previous = current;
-        current  = (current)->next;
-    }
-    return NULL;
-
-    // call this every time we get a tlb or pgtable hit "IF" ffl is lru
-        // both the tlb and the pgtable have ffl_t * frameslist on it. 
-        // so check if it's lru by tlb->frameslist->type == "l"
-        // and call ffl_update(tlb->frameslist, tlb->data->framenumber); 
-
     if (l->flag == "l") {
-        // copy this from tlb_match
-            // that will give you the frame_t that needs to be in the back 
-            // take it out of it's spot, and put it in the back 
-        // call this every time we get a tlb or pgtable hit 
-            // both the tlb and the pgtable have ffl_t * frameslist on it. 
-            // call ffl_update(tlb->frameslist, tlb->data->framenumber); 
+
+        frame_t *previous, *current;
+        frame_t *head = l->head; 
+
+        if (head == NULL) {
+            return NULL;
+        }
+        if ((head)->framenumber == framenumber) {
+            return head;
+        }
+        previous = current = (head)->next;
+        while (current) {
+            if (current->framenumber == framenumber) {
+                // AMAN TODO; 
+                // REMOVE CURRENT FROM LIST 
+                    //(current->prev->next = current->next)
+                    //(current->next->prev = current->prev)
+                // APPEND CURRENT TO END 
+                    //(ffl_addframeToUsedList(l, current->framenumber)) // adds to back
+                // FREE CURRENT
+                return; 
+            }
+
+            previous = current;
+            current  = (current)->next;
+        }
+        return;
+
+        // pgtbl.c:140
+        // PAGETABLE HIT
+        // UPDATE FFL
+
+        // tlb.c:81
+        // TLB HIT
+        // UPDATE FFL 
     }
 
 }
