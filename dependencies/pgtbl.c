@@ -2,7 +2,7 @@
 #include "pgtbl.h"
 
 /* Create a new hashtable. */
-hashtable_t *ht_create( int size ) {
+hashtable_t *ht_create( int size, , ffl_t * f ) {
 
 	hashtable_t *hashtable = NULL;
 	int i;
@@ -23,6 +23,7 @@ hashtable_t *ht_create( int size ) {
 	}
 
 	hashtable->size = size;
+    hashtable->framelist = f; 
 
 	return hashtable;	
 }

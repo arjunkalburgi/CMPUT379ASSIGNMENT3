@@ -2,7 +2,7 @@
 
 #include "tlb.h"
 
-tlb_t * make_tlb(int cap, hashtable_t * h) {
+tlb_t * make_tlb(int cap, hashtable_t * h, ffl_t * f) {
     tlb_t * new_tlb = malloc(sizeof(tlb_t)); 
 
     node_t * head = malloc(sizeof(node_t));
@@ -15,6 +15,7 @@ tlb_t * make_tlb(int cap, hashtable_t * h) {
     new_tlb->length = 1; 
     new_tlb->capacity = cap; 
     new_tlb->hash = h; 
+    new_tlb->framelist = f; 
 
     printf("tlblen: %d, tlbcap: %d, tlbhead: %d, tlbend: %d\n", new_tlb->length, new_tlb->capacity, new_tlb->head->data->pagenumber, new_tlb->end->data->pagenumber);
 
@@ -66,6 +67,9 @@ node_t * tlb_get(tlb_t * t, int pagenumber, measurementarray_t *m) {
 
     if (match == NULL) {
         return tlb_insert(t, pagenumber); 
+    } else {
+        // tlb hit 
+        // if (t->frameslist->flag == "l") {ffl_update(t->frameslist, t->data->framenumber)}
     }
 
     return match; 
@@ -161,7 +165,7 @@ node_t * tlb_match(tlb_t * t, int pagenumber) {
     return NULL;
 }
 
-int tlb_put(tlb_t * t, int pagenumber) {
+/*int tlb_put(tlb_t * t, int pagenumber) {
     node_t * head = t->head;
 
     if (t->length < t->capacity) {
@@ -220,4 +224,4 @@ int tlb_put(tlb_t * t, int pagenumber) {
     }
 
     return 0; 
-}
+}*/

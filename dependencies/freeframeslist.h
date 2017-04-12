@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "page.h"
 
 typedef struct frame {
 	int framenumber; 
@@ -16,11 +15,12 @@ typedef struct ffl {
     struct node * end; 
     int size;
     int capacity;
-    int type; //lru=0, fifo=1
+    char * type; //lru=l, fifo=f
 } ffl_t;
 
 ffl_t * make_ffl(int cap);
 int ffl_get(ffl_t * l);
 void ffl_addframeToUsedList(ffl_t * l, int framenumber);
+void ffl_update(ffl_t * l, int framenumber); 
 
 #endif

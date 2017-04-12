@@ -3,14 +3,14 @@
 
 #include "tlb.h"
 #include "pgtbl.h"
+#include "freeframeslist.h"
 #include "measurementarray.h"
 
-hashtable_t *hashtable;
+ffl_t * frameslist; 
+hashtable_t *pgtable;
 tlb_t *tlb; //-> pagetable -> freeframes list 
 struct measurementarray_t ** measurementarr;
 
 int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...);
-
-
 
 #endif
