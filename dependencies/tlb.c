@@ -57,7 +57,7 @@ void tlb_flush(tlb_t * t) {
     }
 }
 
-node_t * tlb_get(tlb_t * t, int pagenumber) {
+node_t * tlb_get(tlb_t * t, int pagenumber, measurementarray_t *m) {
     /*
         Get stuff from the tlb or insert it from the pagetable
     */

@@ -57,6 +57,7 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 			printf("PN: %u\n", page_number);
 			// here, i think --> tlb(j, page_number);
 			printf("the PN from tlb get: %d\n",(tlb_get(tlb, page_number))->pagenumber);
+			tlb_get(tlb, page_number, measurementarrarr[]);
 
 		}
 		
@@ -77,19 +78,23 @@ int main(int argc, char const *argv[]) {
 	printf("hyspages: %s\n", argv[5]);
 	printf("flag: %s\n", argv[6]);
 
+	int numberoftracefiles = argc-7; 
+
 	int arg = 0; 
-	const char *tracefiles[argc-7]; 
+	const char *tracefiles[numberoftracefiles]; 
 	for (arg = 7; arg<argc; arg++) {
 		tracefiles[arg-7] = argv[arg]; 
 	}
 	int i = 0; 
-	for (i=0; i<argc-7; i++) {
+	for (i=0; i<numberoftracefiles; i++) {
 		printf("trace: %s\n", tracefiles[i]);
 	}
 
 	// make tlb
 	tlb = make_tlb(atoi(argv[2])); //-> pagetable -> freeframes list 
 
+	// make measurementarray array
+	measurementarray_t *measurementarrarr[numberoftracefiles]; 
 
 	int pgsize = atoi(argv[1]);//this is the power of 2 still
 	double second;//helper
