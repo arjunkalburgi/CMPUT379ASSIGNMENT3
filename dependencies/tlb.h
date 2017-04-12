@@ -1,11 +1,14 @@
+#ifndef _TLB_H_
+#define _TLB_H_
+
 #include <stdio.h>
 #include <stdlib.h>
-//#include "measurementarray.h"
+#include "measurementarray.h"
+#include "page.h"
+#include "pgtbl.h"
 
 typedef struct node {
-	int pagenumber;
-	int framenumber;
-	int validbit;
+	struct page * data; 
     struct node * prev;
     struct node * next;
 } node_t;
@@ -15,9 +18,10 @@ typedef struct tlb {
     struct node * end; 
     int length;
     int capacity; 
+    struct hashtable_s * hash; 
 } tlb_t;
 
-tlb_t * make_tlb(int cap);
+tlb_t * make_tlb(int cap, hashtable_t * h);
 void print_tlb_info(tlb_t * tlb);
 void print_node_info(node_t * node);
 void print_list(tlb_t * t);
@@ -30,3 +34,5 @@ node_t * tlb_insert(tlb_t * t, int val);
 // without pagetable
 int tlb_put(tlb_t * t, int val);
 node_t * tlb_match(tlb_t * t, int val);
+
+#endif

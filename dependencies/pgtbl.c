@@ -132,7 +132,7 @@ page_t *ht_get( hashtable_t *hashtable, char *key ) {
 	}
 	
 }
-
+/*
 int main( int argc, char **argv ) {
 
 	hashtable_t *hashtable = ht_create( 65536 );
@@ -170,3 +170,4 @@ int main( int argc, char **argv ) {
 
 	return 0;
 }
+*/
