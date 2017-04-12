@@ -1,10 +1,12 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-#include "tlb.h"
-#include "pgtbl.h"
-#include "freeframeslist.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "measurementarray.h"
+#include "tlb.h"
+// #include "pgtbl.h"
+// #include "freeframeslist.h"
 
 ffl_t * frameslist; 
 hashtable_t *pgtable;

@@ -19,7 +19,7 @@ tlb_t * make_tlb(int cap, hashtable_t * h, ffl_t * f) {
     new_tlb->length = 1; 
     new_tlb->capacity = cap;
     new_tlb->hash = h; 
-    new_tlb->framelist = f; 
+    new_tlb->frameslist = f; 
     printf("new tlb made:\n tlblen: %d, tlbcap: %d\n", new_tlb->length, new_tlb->capacity);
     /*, tlbhead: %d, tlbend: %d\n",*/
     /*, new_tlb->head->data->pagenumber, new_tlb->end->data->pagenumber*/
@@ -180,6 +180,29 @@ node_t * tlb_match(tlb_t * t, int pagenumber) {
         current  = (current)->next;
     }
     return NULL;
+}
+
+void tlb_framematch(tlb_t * t, int framenumber){ 
+    node_t *previous, *current;
+    node_t * head = t->head; 
+
+    if (head == NULL) {
+        return;
+    }
+
+    if ((head)->data->framenumber == framenumber) {
+        return;
+    }
+
+    previous = current = (head)->next;
+    while (current) {
+        if (current->data->framenumber == framenumber) {
+            // GET RID OF CURRENT
+        }
+
+        previous = current;
+        current  = (current)->next;
+    }
 }
 
 /*int tlb_put(tlb_t * t, int pagenumber) {

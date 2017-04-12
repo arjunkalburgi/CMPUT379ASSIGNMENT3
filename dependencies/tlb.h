@@ -3,10 +3,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "measurementarray.h"
-#include "page.h"
 #include "pgtbl.h"
 #include "freeframeslist.h"
+#include "page.h"
+#include "measurementarray.h"
 
 typedef struct node {
 	struct page * data; 
@@ -20,8 +20,9 @@ typedef struct tlb {
     int length;
     int capacity; 
     struct hashtable_s * hash; 
-    struct ffl_t * frameslist; 
+    struct ffl_s * frameslist; 
 } tlb_t;
+
 
 tlb_t * make_tlb(int cap, hashtable_t * h, ffl_t * f);
 void print_tlb_info(tlb_t * tlb);
@@ -33,6 +34,7 @@ void tlb_flush(tlb_t * t);
 node_t * tlb_get(tlb_t * t, int val, measurementarray_t *m);
 node_t * tlb_insert(tlb_t * t, int val);
 node_t * tlb_match(tlb_t * t, int val);
+void tlb_framematch(tlb_t * t, int framenumber); 
 
 // without pagetable
 //int tlb_put(tlb_t * t, int val);
