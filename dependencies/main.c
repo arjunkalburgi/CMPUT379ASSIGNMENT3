@@ -20,7 +20,7 @@
 	trace1 trace2 . . .tracen
 */
 
-int round_robin(int quantum, int pgsize_topass, const char* tracefiles[], int numberoftracefiles, 	measurementarray_t *measurementarrarr[]){
+int round_robin(int quantum, int pgsize_topass, const char* tracefiles[], int numberoftracefiles, 	measurementarray_t *measurementarrarr){
 
 	//char* memory_extract = malloc(quantum * sizeof(4));
 	//va_list arg;
@@ -57,10 +57,10 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles[], int nu
 			uint32_t page_number = j/pgsize_topass;	//this is the page number!!				
 			printf("PN: %u\n", page_number);
 			// here, i think --> tlb(j, page_number);
-			printf("made it b4 get\n");
+			//printf("made it b4 get\n");
 
-			printf("the PN from tlb get: %d\n",(tlb_get(tlb, page_number, measurementarrarr[index]))->data->pagenumber);
-			printf("made it out get\n");
+			printf("the PN from tlb get: %d\n",(tlb_get(tlb, page_number, measurementarrarr))->data->pagenumber);
+			//printf("made it out get\n");
 			//tlb_get(tlb, page_number, measurementarrarr[index]);
 
 		}
@@ -94,6 +94,7 @@ int main(int argc, char const *argv[]) {
 		printf("trace: %s\n", tracefiles[i]);
 	}
 
+
 	// make fl
 	frameslist = make_ffl(atoi(argv[5]), argv[6]);
 
@@ -110,7 +111,8 @@ int main(int argc, char const *argv[]) {
 
 	//printf("made it here\n");
 	// make measurementarray array
-	measurementarray_t *measurementarrarr[numberoftracefiles]; 
+
+	measurementarray_t *measurementarrarr = malloc(numberoftracefiles*sizeof(measurementarray_t)); 
 
 	int pgsize = atoi(argv[1]);//this is the power of 2 still
 	double second;//helper

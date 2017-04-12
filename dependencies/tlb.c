@@ -6,10 +6,10 @@ tlb_t * make_tlb(int cap, hashtable_t * h, ffl_t * f) {
     tlb_t * new_tlb = malloc(sizeof(tlb_t)); 
 
     node_t * head = malloc(sizeof(node_t));
-    printf("made it b4 pg num assign\n");
+    //printf("made it b4 pg num assign\n");
     head = NULL;
     //((head)->data)->pagenumber = -1;
-    printf("made it after pg num assign\n");
+    //printf("made it after pg num assign\n");
 /*
     head->prev = NULL; 
     head->next = NULL; 
@@ -67,19 +67,21 @@ node_t * tlb_get(tlb_t * t, int pagenumber, measurementarray_t *m) {
     /*
         Get stuff from the tlb or insert it from the pagetable
     */
-    printf("made it in get\n");
+    //printf("made it in get\n");
     node_t * match = tlb_match(t, pagenumber); 
-    printf("made it in get after match\n");
+    //printf("made it in get after match\n");
     if(match == NULL) {
-        printf("supggg\n");
+        //printf("supggg\n");
+
         m->tlbmisses = m->tlbmisses + 1;
-        printf("ello\n");
+        //printf("bout to insert\n");
+        //printf("PN: %d\n", pagenumber);
         return tlb_insert(t, pagenumber); 
     } else {
         // tlb hit 
         // if (t->frameslist->flag == "l") {ffl_update(t->frameslist, t->data->framenumber)}
     }
-    printf("made it in get match=null\n");
+    //printf("made it in get match=null\n");
     m->tlbhits++;
     return match; 
 }
@@ -89,14 +91,17 @@ node_t * tlb_insert(tlb_t * t, int pagenumber) {
         this is called if tlb does not have pagenumber
     */
     node_t * head = t->head;
-
+    //printf("inside insert\n");
     // get from pagetable
     node_t * new = malloc(sizeof(node_t));
-    new->data->pagenumber = pagenumber; 
-    // new->data = pgtbl_get(hash, itoa(pagenumber)); // return frame number 
-    new->next = NULL; 
-    new->prev = t->end;
+    //printf("inside insert2\n");
+    new->data = malloc(sizeof(page_t)); 
 
+    new->data->pagenumber = pagenumber; 
+    //printf("inside insert3\n"); 
+    // new->data = pgtbl_get(hash, itoa(pagenumber)); // return frame number 
+    new->next = NULL;
+    new->prev = t->end;
     if (t->length < t->capacity) {
         // increase length
         t->length = t->length + 1; 
@@ -153,18 +158,18 @@ int main(int argc, char const *argv[]) {
 node_t * tlb_match(tlb_t * t, int pagenumber) {
     node_t *previous, *current;
     node_t * head = t->head; 
-    printf("made it to tlb_match\n");
+    //printf("made it to tlb_match\n");
 
     if (head == NULL) {
         return NULL;
     }
-    printf("made it past 1PN head\n");
+    //printf("made it past 1PN head\n");
 
     if ((head)->data->pagenumber == pagenumber) {
         return head;
     }
 
-    printf("made it past PN head\n");
+    //printf("made it past PN head\n");
     previous = current = (head)->next;
     while (current) {
         if (current->data->pagenumber == pagenumber) {
