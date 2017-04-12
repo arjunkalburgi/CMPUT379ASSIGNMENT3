@@ -138,6 +138,7 @@ page_t *ht_get( hashtable_t *hashtable, char *key ) {
 
 	} else {
 		// PAGETABLE HIT
+		ffl_update(hashtable->frameslist, bin);//need int framenumber in this function, is bin the value?
 		// UPDATE FFL
 		return pair->value;
 	}

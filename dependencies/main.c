@@ -108,7 +108,9 @@ int main(int argc, char const *argv[]) {
 	frameslist->hash = pgtable; 
 	frameslist->tlb = tlb; 
 	pgtable->tlb = tlb; 
-
+	pgtable->frameslist = frameslist;
+	tlb->hash = pgtable;
+	tlb->frameslist = frameslist;
 	//printf("made it here\n");
 	// make measurementarray array
 

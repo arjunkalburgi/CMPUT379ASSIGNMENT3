@@ -15,9 +15,10 @@ ffl_t * make_ffl(int cap, const char * flag) {
 
     new_ffl->head = NULL;
     new_ffl->end = new_ffl->head; 
-    new_ffl->length = cap-1; 
+    new_ffl->size = cap-1; 
     new_ffl->capacity = cap;
     new_ffl->type = flag; 
+    //tf is up with these two hash and tlb, they are undeclared, where we get these?
     new_ffl->hash = hash; 
     new_ffl->tlb = tlb;
 
@@ -30,16 +31,16 @@ int ffl_get(ffl_t * l) {
     */
 
 	// there are free frames
-	if (l->length) {
+	if (l->size) {
 		// add the frame to the used frames list
-		ffl_addframeToUsedList(l, l->length); 
-		l->length+=-1; 
+		ffl_addframeToUsedList(l, l->size); 
+		l->size+=-1; 
 		// return the framenumber
-		return l->length+1; 
+		return l->size+1; 
 	}
 
 	// there aren't free frames 
-	if (l->length == 0) {
+	if (l->size == 0) {
 		// evict
         int framenumbertemp = l->head->framenumber; 
         frame_t *temp = l->head; 
@@ -55,7 +56,9 @@ int ffl_get(ffl_t * l) {
     printf("SOMETHING VERY WRONG HAPPENED IN FFL\n");
     printf("SOMETHING VERY WRONG HAPPENED IN FFL\n");
     printf("LENGTH OF FFL WENT NEGATIVE\n");
-    return NULL; 
+    //return NULL; 
+    //cant return null, -1?
+    return -1;
 }
 
 void ffl_addframeToUsedList(ffl_t * l, int framenumber) {
@@ -77,29 +80,30 @@ void ffl_addframeToUsedList(ffl_t * l, int framenumber) {
     }
     l->end = new;
 }
-
+//what should this return?
 void ffl_update(ffl_t * l, int framenumber) {
-    if (l->flag == "l") {
+    if (l->type == "l") {
 
         frame_t *previous, *current;
         frame_t *head = l->head; 
 
         if (head == NULL) {
-            return NULL;
+            return;
         }
         if ((head)->framenumber == framenumber) {
-            return head;
+            return;
         }
         previous = current = (head)->next;
         while (current) {
             if (current->framenumber == framenumber) {
                 // AMAN TODO; 
                 // REMOVE CURRENT FROM LIST 
-                    //(current->prev->next = current->next)
-                    //(current->next->prev = current->prev)
+                (current->prev->next = current->next);
+                (current->next->prev = current->prev);
                 // APPEND CURRENT TO END 
-                    //(ffl_addframeToUsedList(l, current->framenumber)) // adds to back
+                (ffl_addframeToUsedList(l, current->framenumber)); // adds to back
                 // FREE CURRENT
+                free(current);
                 return; 
             }
 
@@ -115,31 +119,8 @@ void ffl_update(ffl_t * l, int framenumber) {
         // tlb.c:81
         // TLB HIT
         // UPDATE FFL 
+        //i added the function to those lines, is that all?
+
     }
 
 }
-/*
-node_t * tlb_match(tlb_t * t, int pagenumber) {
-    node_t *previous, *current;
-    node_t * head = t->head; 
-
-    if (head == NULL) {
-        return NULL;
-    }
-
-    if ((head)->data->pagenumber == pagenumber) {
-        return head;
-    }
-
-    previous = current = (head)->next;
-    while (current) {
-        if (current->data->pagenumber == pagenumber) {
-            return current;
-        }
-
-        previous = current;
-        current  = (current)->next;
-    }
-    return NULL;
-}
-*/
