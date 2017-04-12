@@ -6,19 +6,23 @@ tlb_t * make_tlb(int cap, hashtable_t * h, ffl_t * f) {
     tlb_t * new_tlb = malloc(sizeof(tlb_t)); 
 
     node_t * head = malloc(sizeof(node_t));
-    head->data->pagenumber;
+    printf("made it b4 pg num assign\n");
+    head = NULL;
+    //((head)->data)->pagenumber = -1;
+    printf("made it after pg num assign\n");
+/*
     head->prev = NULL; 
     head->next = NULL; 
-
+ */
     new_tlb->head = head;
     new_tlb->end = new_tlb->head; 
     new_tlb->length = 1; 
-    new_tlb->capacity = cap; 
+    new_tlb->capacity = cap;
     new_tlb->hash = h; 
     new_tlb->framelist = f; 
-
-    printf("tlblen: %d, tlbcap: %d, tlbhead: %d, tlbend: %d\n", new_tlb->length, new_tlb->capacity, new_tlb->head->data->pagenumber, new_tlb->end->data->pagenumber);
-
+    printf("new tlb made:\n tlblen: %d, tlbcap: %d\n", new_tlb->length, new_tlb->capacity);
+    /*, tlbhead: %d, tlbend: %d\n",*/
+    /*, new_tlb->head->data->pagenumber, new_tlb->end->data->pagenumber*/
     return new_tlb; 
 }
 
@@ -63,15 +67,20 @@ node_t * tlb_get(tlb_t * t, int pagenumber, measurementarray_t *m) {
     /*
         Get stuff from the tlb or insert it from the pagetable
     */
+    printf("made it in get\n");
     node_t * match = tlb_match(t, pagenumber); 
-
-    if (match == NULL) {
+    printf("made it in get after match\n");
+    if(match == NULL) {
+        printf("supggg\n");
+        m->tlbmisses = m->tlbmisses + 1;
+        printf("ello\n");
         return tlb_insert(t, pagenumber); 
     } else {
         // tlb hit 
         // if (t->frameslist->flag == "l") {ffl_update(t->frameslist, t->data->framenumber)}
     }
-
+    printf("made it in get match=null\n");
+    m->tlbhits++;
     return match; 
 }
 
@@ -99,7 +108,7 @@ node_t * tlb_insert(tlb_t * t, int pagenumber) {
     }
 
     // append to end (unless tlb is empty (head is null))
-    if (t->head->data->pagenumber) {
+    if (t->head != NULL) {
         t->end->next = new; 
     } else {
         t->head = new; 
@@ -144,15 +153,18 @@ int main(int argc, char const *argv[]) {
 node_t * tlb_match(tlb_t * t, int pagenumber) {
     node_t *previous, *current;
     node_t * head = t->head; 
+    printf("made it to tlb_match\n");
 
     if (head == NULL) {
-        return head;
+        return NULL;
     }
+    printf("made it past 1PN head\n");
 
     if ((head)->data->pagenumber == pagenumber) {
         return head;
     }
 
+    printf("made it past PN head\n");
     previous = current = (head)->next;
     while (current) {
         if (current->data->pagenumber == pagenumber) {

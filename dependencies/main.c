@@ -20,19 +20,20 @@
 	trace1 trace2 . . .tracen
 */
 
-int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
+int round_robin(int quantum, int pgsize_topass, const char* tracefiles[], int numberoftracefiles, 	measurementarray_t *measurementarrarr[]){
 
 	//char* memory_extract = malloc(quantum * sizeof(4));
-	va_list arg;
-	va_start(arg, tracefiles);
-	while(tracefiles){
-		char *string = va_arg(arg, const char *);
+	//va_list arg;
+	//va_start(arg, tracefiles);
+	int index = 0;
+	for(index = 0; index < numberoftracefiles; index++){
+		
 		FILE *ptr;
 
 		//printf("string: %s\n", string);
 
-		char *result = malloc(strlen(string)+strlen(".bin")+1);//+1 for the zero-terminator
-		strcpy(result, string);
+		char *result = malloc(strlen(tracefiles[index])+strlen(".bin")+1);//+1 for the zero-terminator
+		strcpy(result, tracefiles[index]);
 		strcat(result, ".bin");
 		printf("new string: %s\n", result);
 
@@ -56,7 +57,11 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 			uint32_t page_number = j/pgsize_topass;	//this is the page number!!				
 			printf("PN: %u\n", page_number);
 			// here, i think --> tlb(j, page_number);
-			tlb_get(tlb, page_number, measurementarrarr[]);
+			printf("made it b4 get\n");
+
+			printf("the PN from tlb get: %d\n",(tlb_get(tlb, page_number, measurementarrarr[index]))->data->pagenumber);
+			printf("made it out get\n");
+			//tlb_get(tlb, page_number, measurementarrarr[index]);
 
 		}
 		
@@ -64,7 +69,7 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles, ...){
 		// if local -> flush 
 
 	}
-	va_end(arg);
+	
  	return 0;
 }
 
@@ -94,10 +99,13 @@ int main(int argc, char const *argv[]) {
 
 	// make pgtbl
 	pgtable = ht_create(65536, frameslist);
+	printf("made it after hashtable create\n");
 
 	// make tlb
 	tlb = make_tlb(atoi(argv[2]), pgtable, frameslist); //-> pagetable -> freeframes list 
+	printf("made it after make_tlb\n");
 
+	//printf("made it here\n");
 	// make measurementarray array
 	measurementarray_t *measurementarrarr[numberoftracefiles]; 
 
@@ -108,7 +116,7 @@ int main(int argc, char const *argv[]) {
 	pgsize_topass = (int)(log10(pgsize)/second);//calculate the val we pass to rr
 	int quantum = atoi(argv[4]);//#entries we take, also pass to rr
 	printf("pgsize_topass: %d\n", (int)pgsize_topass);
-	round_robin(quantum, pgsize_topass,"test", "heapsort-trace", "quicksort-trace", "heapsort", "quicksort");
+	round_robin(quantum, pgsize_topass, tracefiles, numberoftracefiles, measurementarrarr);
 	return 0;
 }
 
