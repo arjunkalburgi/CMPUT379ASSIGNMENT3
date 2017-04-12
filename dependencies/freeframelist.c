@@ -78,8 +78,53 @@ void ffl_update(ffl_t * l, int framenumber) {
     // copy this from tlb_match
         // that will give you the frame_t that needs to be in the back 
         // take it out of it's spot, and put it in the back 
+    frame_t *previous, *current;
+    frame_t *head = l->head; 
+
+    if (head == NULL) {
+        return NULL;
+    }
+    if ((head)->framenumber == framenumber) {
+        return head;
+    }
+    previous = current = (head)->next;
+    while (current) {
+        if (current->framenumber == framenumber) {
+            return current;
+        }
+
+        previous = current;
+        current  = (current)->next;
+    }
+    return NULL;
+
     // call this every time we get a tlb or pgtable hit "IF" ffl is lru
         // both the tlb and the pgtable have ffl_t * frameslist on it. 
         // so check if it's lru by tlb->frameslist->type == "l"
         // and call ffl_update(tlb->frameslist, tlb->data->framenumber); 
 }
+/*
+node_t * tlb_match(tlb_t * t, int pagenumber) {
+    node_t *previous, *current;
+    node_t * head = t->head; 
+
+    if (head == NULL) {
+        return NULL;
+    }
+
+    if ((head)->data->pagenumber == pagenumber) {
+        return head;
+    }
+
+    previous = current = (head)->next;
+    while (current) {
+        if (current->data->pagenumber == pagenumber) {
+            return current;
+        }
+
+        previous = current;
+        current  = (current)->next;
+    }
+    return NULL;
+}
+*/

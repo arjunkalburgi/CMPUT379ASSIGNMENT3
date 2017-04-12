@@ -3,6 +3,7 @@ main=./dependencies/main.c
 tlb=./dependencies/tlb.c
 ma=./dependencies/measurementarray.c
 pgtbl=./dependencies/pgtbl.c
+ffl=./dependencies/freeframelist.c
 # pgsize?="hey1"
 # tlbentries?="hey2"
 # gflag?="hey3"
@@ -15,8 +16,8 @@ pgtbl=./dependencies/pgtbl.c
 	# quantum physpages { f | l } 
 	# trace1 trace2 . . . tracen
 
-default: $(main) $(tlb) $(ma) $(pgtbl)
-	@$(CC) $< $(tlb) $(ma) $(pgtbl) -o tvm379 -lm
+default: $(main) $(tlb) $(ma) $(pgtbl) $(ffl)
+	@$(CC) $< $(tlb) $(ma) $(pgtbl) $(ffl) -o tvm379 -lm
 
 clean:
 	for n in tests; do $(MAKE) -C $$n clean; done
