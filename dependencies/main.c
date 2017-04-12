@@ -89,8 +89,11 @@ int main(int argc, char const *argv[]) {
 		printf("trace: %s\n", tracefiles[i]);
 	}
 
+	// make hash 
+	hashtable = ht_create( 65536 );
+
 	// make tlb
-	tlb = make_tlb(atoi(argv[2])); //-> pagetable -> freeframes list 
+	tlb = make_tlb(atoi(argv[2]), hashtable); //-> pagetable -> freeframes list 
 
 	// make measurementarray array
 	measurementarray_t *measurementarrarr[numberoftracefiles]; 

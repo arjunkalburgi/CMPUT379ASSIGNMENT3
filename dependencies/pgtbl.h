@@ -2,18 +2,13 @@
 #include <stdio.h>
 #include <limits.h>
 #include <string.h>
+#include "page.h"
 
 typedef struct entry_s {
 	char *key;
-	struct node *value;
+	struct page *value;
 	struct entry_s *next;
 } entry_t;
-
-typedef struct node {
-	int pagenumber;
-	int framenumber;
-	int validbit;
-} page_t;
 
 typedef struct hashtable_s {
 	int size;

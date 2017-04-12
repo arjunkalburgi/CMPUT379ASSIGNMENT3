@@ -2,11 +2,11 @@
 
 #include "tlb.h"
 
-tlb_t * make_tlb(int cap) {
+tlb_t * make_tlb(int cap, hashtable_t * h) {
     tlb_t * new_tlb = malloc(sizeof(tlb_t)); 
 
     node_t * head = malloc(sizeof(node_t));
-    head->pagenumber;
+    head->data->pagenumber;
     head->prev = NULL; 
     head->next = NULL; 
 
@@ -14,23 +14,24 @@ tlb_t * make_tlb(int cap) {
     new_tlb->end = new_tlb->head; 
     new_tlb->length = 1; 
     new_tlb->capacity = cap; 
+    new_tlb->hash = h; 
 
-    printf("tlblen: %d, tlbcap: %d, tlbhead: %d, tlbend: %d\n", new_tlb->length, new_tlb->capacity, new_tlb->head->pagenumber, new_tlb->end->pagenumber);
+    printf("tlblen: %d, tlbcap: %d, tlbhead: %d, tlbend: %d\n", new_tlb->length, new_tlb->capacity, new_tlb->head->data->pagenumber, new_tlb->end->data->pagenumber);
 
     return new_tlb; 
 }
 
 void print_tlb_info(tlb_t * tlb) {
-    printf("tlblen: %d, tlbcap: %d, tlbhead: %d, tlbend: %d\n", tlb->length, tlb->capacity, tlb->head->pagenumber, tlb->end->pagenumber);
+    printf("tlblen: %d, tlbcap: %d, tlbhead: %d, tlbend: %d\n", tlb->length, tlb->capacity, tlb->head->data->pagenumber, tlb->end->data->pagenumber);
 }
 
 void print_node_info(node_t * node) {
     if (node->next == NULL) {
-        printf("nodeprev: %d, pagenumber: %d, nodenext: %s\n", node->prev->pagenumber, node->pagenumber, "NULL");
+        printf("nodeprev: %d, pagenumber: %d, nodenext: %s\n", node->prev->data->pagenumber, node->data->pagenumber, "NULL");
     } else if (node->prev == NULL) {
-        printf("nodeprev: %s, pagenumber: %d, nodenext: %d\n", "NULL", node->pagenumber, node->next->pagenumber);
+        printf("nodeprev: %s, pagenumber: %d, nodenext: %d\n", "NULL", node->data->pagenumber, node->next->data->pagenumber);
     } else {
-        printf("nodeprev: %d, pagenumber: %d, nodenext: %d\n", node->prev->pagenumber, node->pagenumber, node->next->pagenumber);
+        printf("nodeprev: %d, pagenumber: %d, nodenext: %d\n", node->prev->data->pagenumber, node->data->pagenumber, node->next->data->pagenumber);
     }
 }
 
@@ -38,7 +39,7 @@ void print_list(tlb_t * t) {
     node_t * current = t->head;
     int num = 1; 
     while (current != NULL) {
-        printf("%d: %d\n", num, current->pagenumber);
+        printf("%d: %d\n", num, current->data->pagenumber);
         current = current->next;
         num++; 
     }
@@ -77,9 +78,9 @@ node_t * tlb_insert(tlb_t * t, int pagenumber) {
     node_t * head = t->head;
 
     // get from pagetable
-    // page_t * page = pgtbl_get()
     node_t * new = malloc(sizeof(node_t));
-    new->pagenumber = pagenumber; 
+    new->data->pagenumber = pagenumber; 
+    // new->data = pgtbl_get(hash, itoa(pagenumber));
     new->next = NULL; 
     new->prev = t->end;
 
@@ -94,7 +95,7 @@ node_t * tlb_insert(tlb_t * t, int pagenumber) {
     }
 
     // append to end (unless tlb is empty (head is null))
-    if (t->head->pagenumber) {
+    if (t->head->data->pagenumber) {
         t->end->next = new; 
     } else {
         t->head = new; 
@@ -144,13 +145,13 @@ node_t * tlb_match(tlb_t * t, int pagenumber) {
         return head;
     }
 
-    if ((head)->pagenumber == pagenumber) {
+    if ((head)->data->pagenumber == pagenumber) {
         return head;
     }
 
     previous = current = (head)->next;
     while (current) {
-        if (current->pagenumber == pagenumber) {
+        if (current->data->pagenumber == pagenumber) {
             return current;
         }
 
@@ -166,7 +167,7 @@ int tlb_put(tlb_t * t, int pagenumber) {
     if (t->length < t->capacity) {
         // append to end
         node_t * new = malloc(sizeof(node_t));
-        new->pagenumber = pagenumber; 
+        new->data->pagenumber = pagenumber; 
         new->next = NULL; 
         new->prev = t->end;
         t->end->next = new; 
@@ -210,7 +211,7 @@ int tlb_put(tlb_t * t, int pagenumber) {
         free(temp); 
         // append to end
         node_t * new = malloc(sizeof(node_t));
-        new->pagenumber = pagenumber; 
+        new->data->pagenumber = pagenumber; 
         new->next = NULL; 
         new->prev = t->end;
         t->end->next = new; 
