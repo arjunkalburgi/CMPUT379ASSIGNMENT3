@@ -131,9 +131,13 @@ page_t *ht_get( hashtable_t *hashtable, char *key ) {
 
 	/* Did we actually find anything? */
 	if( pair == NULL || pair->key == NULL || strcmp( key, pair->key ) != 0 ) {
-		/* Get a new frame for this page */
-		pair->value->framenumber = ffl_get(hashtable->frameslist); 
-		return pair->value; 
+		// PAGETABLE MISS
+		page_t * pg = malloc(sizeof(page_t)); 
+		pg->pagenumber = atoi(key);
+		pg->framenumber = ffl_get(hashtable->frameslist); /* Get a new frame for this page */
+		pg->validbit = 1;
+		ht_set(hashtable, key, pg); // add to the hashtable
+		return pg; 
 	} else {
 		// PAGETABLE HIT UPDATE FFL (if lru)
 		ffl_update(hashtable->frameslist, pair->value->framenumber);
