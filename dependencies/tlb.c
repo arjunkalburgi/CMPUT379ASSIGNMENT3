@@ -36,7 +36,7 @@ void print_list(tlb_t * t) {
     node_t * current = t->head;
     int num = 1; 
     while (current != NULL) {
-        printf("%d: %d\n", num, current->data->pagenumber);
+        printf("%d: %d - %d\n", num, current->data->pagenumber, current->data->framenumber);
         current = current->next;
         num++; 
     }
@@ -118,8 +118,21 @@ node_t * tlb_match(tlb_t * t, int pagenumber) {
         return NULL;
     }
 
+    if (t->end->data->pagenumber == pagenumber) {
+        return t->end; 
+    }
+
     if ((head)->data->pagenumber == pagenumber) {
-        return head;
+        current = head; 
+        // update head
+        current->next->prev = NULL; 
+        t->head = current->next; 
+        // update end 
+        current->prev = t->end; 
+        current->next = NULL; 
+        t->end->next = current; 
+        t->end = current; 
+        return current;
     }
 
     previous = current = (head)->next;

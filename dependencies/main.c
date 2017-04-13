@@ -70,7 +70,7 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles[], int nu
  	return 0;
 }
 
-int main(int argc, char const *argv[]) {	
+int main(int argc, char const *argv[]) {
 	/*printf("pgsize: %s\n", argv[1]);
 	printf("tlbentries: %s\n", argv[2]);
 	printf("flag: %s\n", argv[3]);
@@ -92,9 +92,9 @@ int main(int argc, char const *argv[]) {
 
 	// make fl
 	if (argv[6] == "l") {
-		frameslist = make_ffl(atoi(argv[5]), "l");
+		frameslist = make_ffl(atoi(argv[5]), 1);
 	} else {
-		frameslist = make_ffl(atoi(argv[5]), "f");
+		frameslist = make_ffl(atoi(argv[5]), 0);
 	}
 
 	// make pgtbl

@@ -7,7 +7,7 @@
 
 #include "freeframeslist.h"
 
-ffl_t * make_ffl(int cap, char * flag) {
+ffl_t * make_ffl(int cap, int flag) {
     ffl_t * new_ffl = malloc(sizeof(ffl_t)); 
 
     new_ffl->head = NULL;
@@ -25,7 +25,6 @@ int ffl_get(ffl_t * l) {
     /*
         Get a frame from the ffl or evict
     */
-
 	// there are free frames
 	if (l->size) {
 		// add the frame to the used frames list
@@ -42,7 +41,8 @@ int ffl_get(ffl_t * l) {
         frame_t *temp = l->head; 
         l->head = l->head->next; 
         free(temp); 
-        ht_framematch(l->hash, framenumbertemp); 
+        // ht_framematch(l->hash, framenumbertemp); 
+        printf("frame %d evicted\n", framenumbertemp);
         tlb_framematch(l->tlb, framenumbertemp); 
 		// return the framenumber
         return framenumbertemp; 
@@ -74,7 +74,7 @@ void ffl_addframeToUsedList(ffl_t * l, int framenumber) {
 }
 
 void ffl_update(ffl_t * l, int framenumber) {
-    if (l->type == "l") {
+    if (l->type == 1) {
 
         frame_t *previous, *current;
         frame_t *head = l->head; 
@@ -106,5 +106,4 @@ void ffl_update(ffl_t * l, int framenumber) {
         }
         return;
     }
-
 }

@@ -16,7 +16,6 @@ typedef struct entry_s {
 typedef struct hashtable_s {
 	int size;
 	struct entry_s **table;
-	struct entry_s **frametable; 
     struct ffl_s * frameslist; 
     struct tlb * tlb; 
 } hashtable_t;
@@ -25,7 +24,7 @@ typedef struct hashtable_s {
 hashtable_t *ht_create( int size, struct ffl_s * f); 
 int ht_hash( hashtable_t *hashtable, char *key ); 
 entry_t *ht_newpair( char *key, page_t *value ); 
-void ht_set( hashtable_t *hashtable, char *key, page_t *value ); 
+page_t * ht_set( hashtable_t *hashtable, char *key, page_t *value ); 
 page_t *ht_get( hashtable_t *hashtable, char *key );
 void ht_framematch(hashtable_t *h, int framenumber); 
 

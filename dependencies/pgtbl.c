@@ -21,12 +21,6 @@ hashtable_t *ht_create( int size, ffl_t * f) {
 	for( i = 0; i < size; i++ ) {
 		hashtable->table[i] = NULL;
 	}
-	if( ( hashtable->frametable = malloc( sizeof( entry_t * ) * size ) ) == NULL ) {
-		return NULL;
-	}
-	for( i = 0; i < size; i++ ) {
-		hashtable->frametable[i] = NULL;
-	}
 
 	hashtable->size = size;
     hashtable->frameslist = f; 
@@ -72,7 +66,7 @@ entry_t *ht_newpair( char *key, page_t *value ) {
 }
 
 /* Insert a key-value pair into a hash table. */
-void ht_set( hashtable_t *hashtable, char *key, page_t *value ) {
+page_t * ht_set( hashtable_t *hashtable, char *key, page_t *value ) {
 	int bin = 0;
 	entry_t *newpair = NULL;
 	entry_t *next = NULL;
@@ -86,14 +80,13 @@ void ht_set( hashtable_t *hashtable, char *key, page_t *value ) {
 		last = next;
 		next = next->next;
 	}
-
+	
 	/* There's already a pair.  Let's replace that string. */
 	if( next != NULL && next->key != NULL && strcmp( key, next->key ) == 0 ) {
 
-		free( next->value );
-		page_t * valuecpy; 
-		memcpy(&valuecpy, &value, sizeof(page_t)); 
-		next->value = valuecpy; 
+		printf("pgtbl ffl update 1\n");
+	    ffl_update(hashtable->frameslist, next->value->framenumber);
+		return next->value;
 
 	/* Nope, could't find it.  Time to grow a pair. */
 	} else {
@@ -113,59 +106,46 @@ void ht_set( hashtable_t *hashtable, char *key, page_t *value ) {
 			newpair->next = next;
 			last->next = newpair;
 		}
+		return NULL; 
 	}
 }
 
 /* Retrieve a key-value pair from a hash table. */
 page_t *ht_get( hashtable_t *hashtable, char *key ) {
 	int bin = 0;
-	entry_t *pair;
+	entry_t *next = NULL;
+	entry_t *last = NULL;
 
 	bin = ht_hash( hashtable, key );
+	
+	next = hashtable->table[ bin ];
 
-	/* Step through the bin, looking for our value. */
-	pair = hashtable->table[ bin ];
-	while( pair != NULL && pair->key != NULL && strcmp( key, pair->key ) > 0 ) {
-		pair = pair->next;
+	while( next != NULL && next->key != NULL && strcmp( key, next->key ) > 0 ) {
+		last = next;
+		next = next->next;
 	}
+	/* There's already a pair.  Let's replace that string. */
+	if( next != NULL && next->key != NULL && strcmp( key, next->key ) == 0 ) {
 
-	/* Did we actually find anything? */
-	if( pair == NULL || pair->key == NULL || strcmp( key, pair->key ) != 0 ) {
+		// PAGETABLE HIT UPDATE FFL (if lru)
+	    ffl_update(hashtable->frameslist, next->value->framenumber);
+		return next->value;
+
+	/* Nope, could't find it.  Time to grow a pair. */
+	} else {
 		// PAGETABLE MISS
 		page_t * pg = malloc(sizeof(page_t)); 
 		pg->pagenumber = atoi(key);
 		pg->framenumber = ffl_get(hashtable->frameslist); /* Get a new frame for this page */
 		pg->validbit = 1;
-		ht_set(hashtable, key, pg); // add to the hashtable
-		return pg; 
-	} else {
-		// PAGETABLE HIT UPDATE FFL (if lru)
-		ffl_update(hashtable->frameslist, pair->value->framenumber);
-		return pair->value;
+		page_t *p = ht_set(hashtable, key, pg); // add to the hashtable
+		if (p == NULL) {
+			// printf("pgtbl miss - new framenumber: %d\n", pg->framenumber);
+			return pg; 
+		} else {
+			// printf("pgtbl hit lol - old framenumber: %d\n", p->framenumber);
+	    	ffl_update(hashtable->frameslist, p->framenumber);
+			return p;
+		}
 	}
-	
 }
-
-void ht_framematch(hashtable_t *h, int framenumber) {
-	
-	char * key; // = itoa(framenumber); // framenumber to char 
-	int bin = 0;
-	entry_t *pair;
-
-	bin = ht_hash( h, key );
-
-	/* Step through the bin, looking for our value. */
-	pair = h->frametable[ bin ];
-	while( pair != NULL && pair->key != NULL && strcmp( key, pair->key ) > 0 ) {
-		pair = pair->next;
-	}
-
-	page_t * pg = pair->value; 
-
-	// set pg's bit to invalid
-
-	// call tlb's framematch with page
-
-}
-
-// void ht_frameset, make the thing too 
