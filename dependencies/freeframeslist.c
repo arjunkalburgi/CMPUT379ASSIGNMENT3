@@ -19,8 +19,9 @@ ffl_t * make_ffl(int cap, const char * flag) {
     new_ffl->capacity = cap;
     new_ffl->type = flag; 
     //tf is up with these two hash and tlb, they are undeclared, where we get these?
-    new_ffl->hash = hash; 
-    new_ffl->tlb = tlb;
+    //do they need to be global?
+    new_ffl->hash = hash; //HASHTABLE hashtable_s
+    new_ffl->tlb = tlb;   //TLB tlb
 
     return new_ffl; 
 }
@@ -112,12 +113,14 @@ void ffl_update(ffl_t * l, int framenumber) {
         }
         return;
 
-        // pgtbl.c:140
-        // PAGETABLE HIT
-        // UPDATE FFL
-
-        // tlb.c:81
-        // TLB HIT
+        //DOES MEASUREMENT ARRAY NEED TO BE UPDATED AROUND HERE? ---
+//                                                                  |
+        // pgtbl.c:140                                              |
+        // PAGETABLE HIT                                    <-------|
+        // UPDATE FFL                                               |
+        //                                                          |
+        // tlb.c:81                                                 |
+        // TLB HIT                                          <-------|
         // UPDATE FFL 
         //i added the function to those lines, is that all?
 
