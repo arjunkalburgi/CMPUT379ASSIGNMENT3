@@ -77,14 +77,14 @@ node_t * tlb_insert(tlb_t * t, int pagenumber, measurementarray_t *m) {
         this is called if tlb does not have pagenumber
     */
     node_t * head = t->head;
+
+    char pagenumberkey[5]; 
+    snprintf(pagenumberkey, 5,"%d", pagenumber);
     
-    // get from pagetable
+    // make new node
     node_t * new = malloc(sizeof(node_t));
     new->data = malloc(sizeof(page_t)); 
-    new->data->pagenumber = pagenumber; 
-
-    // new->data = pgtbl_get(hash, itoa(pagenumber)); // return frame number 
-
+    new->data = ht_get(t->hash, pagenumberkey); // return page from pagetable, = pagenumber;
     new->next = NULL;
     new->prev = t->end;
 

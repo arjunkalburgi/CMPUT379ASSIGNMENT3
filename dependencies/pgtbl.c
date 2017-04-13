@@ -131,11 +131,9 @@ page_t *ht_get( hashtable_t *hashtable, char *key ) {
 
 	/* Did we actually find anything? */
 	if( pair == NULL || pair->key == NULL || strcmp( key, pair->key ) != 0 ) {
-		/* Get a new frame for this. */
-		// return framenumber 
-		// and mark page with framenumber as invalid
-		return NULL;
-
+		/* Get a new frame for this page */
+		pair->value->framenumber = ffl_get(hashtable->frameslist); 
+		return pair->value; 
 	} else {
 		// PAGETABLE HIT UPDATE FFL (if lru)
 		ffl_update(hashtable->frameslist, pair->value->framenumber);
