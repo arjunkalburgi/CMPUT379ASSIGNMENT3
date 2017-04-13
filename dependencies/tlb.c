@@ -66,7 +66,7 @@ node_t * tlb_get(tlb_t * t, int pagenumber, measurementarray_t *m) {
         return tlb_insert(t, pagenumber, m); 
     }
 
-    // TLB HIT UPDATE FFL (if lru)
+    // TLB HIT UPDATE TLB, UPDATE FFL (if lru)
     ffl_update(t->frameslist, match->data->framenumber);
     m->tlbhits++;
     return match; 
@@ -113,21 +113,24 @@ node_t * tlb_insert(tlb_t * t, int pagenumber, measurementarray_t *m) {
 node_t * tlb_match(tlb_t * t, int pagenumber) {
     node_t *previous, *current;
     node_t * head = t->head; 
-    //printf("made it to tlb_match\n");
 
     if (head == NULL) {
         return NULL;
     }
-    //printf("made it past 1PN head\n");
 
     if ((head)->data->pagenumber == pagenumber) {
         return head;
     }
 
-    //printf("made it past PN head\n");
     previous = current = (head)->next;
     while (current) {
         if (current->data->pagenumber == pagenumber) {
+            current->prev->next = current->next; 
+            current->next->prev = current->prev; 
+            current->prev = t->end; 
+            current->next = NULL; 
+            t->end->next = current; 
+            t->end = current; 
             return current;
         }
 
@@ -137,7 +140,9 @@ node_t * tlb_match(tlb_t * t, int pagenumber) {
     return NULL;
 }
 
-void tlb_framematch(tlb_t * t, int framenumber){ 
+void tlb_framematch(tlb_t * t, int framenumber) {
+    // frame has been assigned elsewhere, remove entry
+
     node_t *previous, *current;
     node_t * head = t->head; 
 
@@ -146,13 +151,21 @@ void tlb_framematch(tlb_t * t, int framenumber){
     }
 
     if ((head)->data->framenumber == framenumber) {
-        return;
+        // GET RID OF HEAD
+        head->next->prev = NULL; 
+        head = head->next; 
+        free(head);
+        return; 
     }
 
     previous = current = (head)->next;
     while (current) {
         if (current->data->framenumber == framenumber) {
             // GET RID OF CURRENT
+            current->prev->next = current->next; 
+            current->next->prev = current->prev; 
+            free(current); 
+            return; 
         }
 
         previous = current;
