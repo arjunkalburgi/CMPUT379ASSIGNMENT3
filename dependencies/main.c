@@ -61,6 +61,7 @@ int round_robin(int quantum, int pgsize_topass, const char* tracefiles[], int nu
 
 			printf("the PN from tlb get: %d\n",(tlb_get(tlb, page_number, measurementarrarr))->data->pagenumber);
 			//printf("made it out get\n");
+			printf("should be printing: tlbhitsn pfn pageoutn avsn\n");
 			//tlb_get(tlb, page_number, measurementarrarr[index]);
 
 		}
