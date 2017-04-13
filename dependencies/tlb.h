@@ -31,10 +31,10 @@ void print_list(tlb_t * t);
 void tlb_flush(tlb_t * t);
 
 // with pagetable
-node_t * tlb_get(tlb_t * t, int val, measurementarray_t *m);
-node_t * tlb_insert(tlb_t * t, int val);
-node_t * tlb_match(tlb_t * t, int val);
-void tlb_framematch(tlb_t * t, int framenumber); 
+node_t * tlb_get(tlb_t * t, int pagenumber, measurementarray_t *m);
+node_t * tlb_insert(tlb_t * t, int pagenumber, measurementarray_t *m);
+node_t * tlb_match(tlb_t * t, int pagenumber);
+void tlb_framematch(tlb_t * t, int framenumber);
 
 // without pagetable
 //int tlb_put(tlb_t * t, int val);

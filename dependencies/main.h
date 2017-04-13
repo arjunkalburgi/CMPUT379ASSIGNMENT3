@@ -12,8 +12,8 @@ ffl_t * frameslist;
 hashtable_t *pgtable;
 tlb_t *tlb; //-> pagetable -> freeframes list 
 
-measurementarray_t * measurementarrarr;
+char * localtlbflag; 
 
-int round_robin(int quantum, int pgsize_topass, const char* tracefiles[], int numberoftracefiles, measurementarray_t *measurementarrarr);
+int round_robin(int quantum, int pgsize_topass, const char* tracefiles[], int numberoftracefiles);
 
 #endif

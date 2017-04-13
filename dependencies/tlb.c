@@ -6,10 +6,7 @@ tlb_t * make_tlb(int cap, hashtable_t * h, ffl_t * f) {
     tlb_t * new_tlb = malloc(sizeof(tlb_t)); 
 
     node_t * head = malloc(sizeof(node_t));
-    //printf("made it b4 pg num assign\n");
     head = NULL;
-    //((head)->data)->pagenumber = -1;
-    //printf("made it after pg num assign\n");
 
     new_tlb->head = head;
     new_tlb->end = new_tlb->head; 
@@ -18,8 +15,6 @@ tlb_t * make_tlb(int cap, hashtable_t * h, ffl_t * f) {
     new_tlb->hash = h; 
     new_tlb->frameslist = f; 
     printf("new tlb made:\n tlblen: %d, tlbcap: %d\n", new_tlb->length, new_tlb->capacity);
-    /*, tlbhead: %d, tlbend: %d\n",*/
-    /*, new_tlb->head->data->pagenumber, new_tlb->end->data->pagenumber*/
     return new_tlb; 
 }
 
@@ -64,47 +59,41 @@ node_t * tlb_get(tlb_t * t, int pagenumber, measurementarray_t *m) {
     /*
         Get stuff from the tlb or insert it from the pagetable
     */
-    //printf("made it in get\n");
     node_t * match = tlb_match(t, pagenumber); 
-    //printf("made it in get after match\n");
     if(match == NULL) {
-        //printf("supggg\n");
-
-        m->tlbmisses = m->tlbmisses + 1;
-        //printf("bout to insert\n");
-        //printf("PN: %d\n", pagenumber);
-        return tlb_insert(t, pagenumber); 
-    } else {
-        // TLB HIT
-        ffl_update(t->frameslist, match->data->framenumber);
-        // UPDATE FFL 
+        // TLB MISS
+        m->tlbmisses++;
+        return tlb_insert(t, pagenumber, m); 
     }
-    //printf("made it in get match=null\n");
+
+    // TLB HIT UPDATE FFL (if lru)
+    ffl_update(t->frameslist, match->data->framenumber);
     m->tlbhits++;
     return match; 
 }
 
-node_t * tlb_insert(tlb_t * t, int pagenumber) {
+node_t * tlb_insert(tlb_t * t, int pagenumber, measurementarray_t *m) {
     /*
         this is called if tlb does not have pagenumber
     */
     node_t * head = t->head;
-    //printf("inside insert\n");
+    
     // get from pagetable
     node_t * new = malloc(sizeof(node_t));
-    //printf("inside insert2\n");
     new->data = malloc(sizeof(page_t)); 
-
     new->data->pagenumber = pagenumber; 
-    //printf("inside insert3\n"); 
+
     // new->data = pgtbl_get(hash, itoa(pagenumber)); // return frame number 
+
     new->next = NULL;
     new->prev = t->end;
+
     if (t->length < t->capacity) {
         // increase length
         t->length = t->length + 1; 
     } else {
         // evict 
+        m->evictedpages++; 
         node_t *temp = t->head; 
         t->head = t->head->next; 
         free(temp); 
@@ -120,38 +109,6 @@ node_t * tlb_insert(tlb_t * t, int pagenumber) {
 
     return new;
 }
-/*
-int main(int argc, char const *argv[]) {
-
-    tlb_t *tlb = make_tlb(3); 
-    tlb_put(tlb, 1); 
-    tlb_put(tlb, 2); 
-    tlb_put(tlb, 3); 
-    print_tlb_info(tlb);
-    print_list(tlb); 
-
-    // match end
-    tlb_put(tlb, 3); 
-    print_tlb_info(tlb);
-    print_list(tlb);
-
-    // match 
-    tlb_put(tlb, 2); 
-    print_tlb_info(tlb);
-    print_list(tlb); 
-
-    // match head
-    tlb_put(tlb, 1); 
-    print_tlb_info(tlb);
-    print_list(tlb); 
-
-    // no match
-    tlb_put(tlb, 4); 
-    print_tlb_info(tlb);
-    print_list(tlb);
-}
-*/
-
 
 node_t * tlb_match(tlb_t * t, int pagenumber) {
     node_t *previous, *current;
@@ -202,64 +159,3 @@ void tlb_framematch(tlb_t * t, int framenumber){
         current  = (current)->next;
     }
 }
-
-/*int tlb_put(tlb_t * t, int pagenumber) {
-    node_t * head = t->head;
-
-    if (t->length < t->capacity) {
-        // append to end
-        node_t * new = malloc(sizeof(node_t));
-        new->data->pagenumber = pagenumber; 
-        new->next = NULL; 
-        new->prev = t->end;
-        t->end->next = new; 
-        t->end = new; 
-        t->length = t->length + 1; 
-        return 1;
-    }
-
-    node_t * match = tlb_match(t, pagenumber); 
-    if (match != NULL) {
-        // already in there
-        // if it's the head
-        if (match == t->head) {
-            // remove it. 
-            match->next->prev = match->prev; 
-            t->head = match->next; 
-            // move to back
-            match->next = NULL; 
-            match->prev = t->end;
-            t->end->next = match; 
-            t->end = match;
-        }
-        // if it's the end, then it's already at the back
-        else if (match != t->end) {
-            // remove it. 
-            match->prev->next = match->next; 
-            match->next->prev = match->prev; 
-            // move to back
-            match->next = NULL; 
-            match->prev = t->end;
-            t->end->next = match; 
-            t->end = match;
-        }
-        return 1; 
-    }
-
-    else {
-        // evict 
-        node_t *temp = t->head; 
-        t->head = t->head->next; 
-        free(temp); 
-        // append to end
-        node_t * new = malloc(sizeof(node_t));
-        new->data->pagenumber = pagenumber; 
-        new->next = NULL; 
-        new->prev = t->end;
-        t->end->next = new; 
-        t->end = new;
-        return 1;
-    }
-
-    return 0; 
-}*/

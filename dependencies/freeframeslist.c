@@ -7,21 +7,16 @@
 
 #include "freeframeslist.h"
 
-ffl_t * make_ffl(int cap, const char * flag) {
+ffl_t * make_ffl(int cap, char * flag) {
     ffl_t * new_ffl = malloc(sizeof(ffl_t)); 
-
-    // frame_t * head = malloc(sizeof(frame_t));
-    // head = NULL; 
 
     new_ffl->head = NULL;
     new_ffl->end = new_ffl->head; 
     new_ffl->size = cap-1; 
     new_ffl->capacity = cap;
     new_ffl->type = flag; 
-    //tf is up with these two hash and tlb, they are undeclared, where we get these?
-    //do they need to be global?
-    new_ffl->hash = hash; //HASHTABLE hashtable_s
-    new_ffl->tlb = tlb;   //TLB tlb
+    // new_ffl->hash = hash; //HASHTABLE hashtable_s
+    // new_ffl->tlb = tlb;   //TLB tlb
 
     return new_ffl; 
 }
@@ -54,11 +49,7 @@ int ffl_get(ffl_t * l) {
 	}
 
     printf("SOMETHING VERY WRONG HAPPENED IN FFL\n");
-    printf("SOMETHING VERY WRONG HAPPENED IN FFL\n");
-    printf("SOMETHING VERY WRONG HAPPENED IN FFL\n");
     printf("LENGTH OF FFL WENT NEGATIVE\n");
-    //return NULL; 
-    //cant return null, -1?
     return -1;
 }
 
@@ -81,7 +72,7 @@ void ffl_addframeToUsedList(ffl_t * l, int framenumber) {
     }
     l->end = new;
 }
-//what should this return?
+
 void ffl_update(ffl_t * l, int framenumber) {
     if (l->type == "l") {
 
@@ -96,34 +87,24 @@ void ffl_update(ffl_t * l, int framenumber) {
         }
         previous = current = (head)->next;
         while (current) {
+
+            // if match
             if (current->framenumber == framenumber) {
-                // AMAN TODO; 
                 // REMOVE CURRENT FROM LIST 
-                (current->prev->next = current->next);
-                (current->next->prev = current->prev);
+                current->prev->next = current->next;
+                current->next->prev = current->prev;
                 // APPEND CURRENT TO END 
-                (ffl_addframeToUsedList(l, current->framenumber)); // adds to back
+                ffl_addframeToUsedList(l, current->framenumber); // adds to back
                 // FREE CURRENT
                 free(current);
                 return; 
             }
 
+            // move to next
             previous = current;
             current  = (current)->next;
         }
         return;
-
-        //DOES MEASUREMENT ARRAY NEED TO BE UPDATED AROUND HERE? ---
-//                                                                  |
-        // pgtbl.c:140                                              |
-        // PAGETABLE HIT                                    <-------|
-        // UPDATE FFL                                               |
-        //                                                          |
-        // tlb.c:81                                                 |
-        // TLB HIT                                          <-------|
-        // UPDATE FFL 
-        //i added the function to those lines, is that all?
-
     }
 
 }

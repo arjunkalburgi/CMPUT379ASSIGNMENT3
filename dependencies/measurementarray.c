@@ -1,14 +1,14 @@
 #include "measurementarray.h"
 
-//void outputmeasurementarray(char[] tracefile, measurementarray_t * m) {
-//	printf("%s %d %d %d %d\n", tracefile, m->tlbhits, m->tlbmisses, m->evictedpages, m->memoryresidentpagesforprocess);
-//}
-/* //lol just tried this, not sure if right
-void recordhit(measurementarray_t *m){
-	m->tlbhits++;
+void outputmeasurementarrays(const char* tracefiles[], int numberoftracefiles, measurementarray_t *measurementarrarr[]) {
+
+	int index = 0;
+	for(index = 0; index < numberoftracefiles; index++) {
+		outputmeasurementarray(tracefiles[index], measurementarrarr[index]); 
+	}
+
 }
 
-void recordhit(measurementarray_t *m){
-	m->tlbmiss++;
+void outputmeasurementarray(const char * tracefile, measurementarray_t * m) {
+	printf("%s %d %d %d \n", tracefile, m->tlbhits, m->tlbmisses, m->evictedpages);
 }
-*/

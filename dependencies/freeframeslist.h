@@ -20,7 +20,7 @@ typedef struct ffl_s {
     struct tlb *tlb;
 } ffl_t;
 
-ffl_t * make_ffl(int cap, const char * flag);
+ffl_t * make_ffl(int cap, char * flag);
 int ffl_get(ffl_t * l);
 void ffl_addframeToUsedList(ffl_t * l, int framenumber);
 void ffl_update(ffl_t * l, int framenumber); 

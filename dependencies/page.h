@@ -7,5 +7,4 @@ typedef struct page {
 	int validbit;
 } page_t;
 
-
 #endif
